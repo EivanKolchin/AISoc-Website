@@ -67,25 +67,6 @@ const glow =
       <h2 class="h-line" id="news-h">News</h2>
       <a class="news-box" href={site.notice.url}>{site.notice.text}</a>
     </section>
-
-    <nav class="bus" aria-label="Sections">
-      <a class="way way--live" href="/events">
-        <span class="way-name">Events</span>
-        <span class="way-desc">The calendar, weekly workshops, and what you missed.</span>
-      </a>
-      <a class="way" href="/projects">
-        <span class="way-name">Projects</span>
-        <span class="way-desc">SotonLM, and what members have built.</span>
-      </a>
-      <a class="way" href="/gallery">
-        <span class="way-name">Gallery</span>
-        <span class="way-desc">Photos from workshops, talks and socials.</span>
-      </a>
-      <a class="way" href="/committee">
-        <span class="way-name">Committee</span>
-        <span class="way-desc">Who to ask, and how to reach them.</span>
-      </a>
-    </nav>
   </div>
 
   <div class="home-light">
@@ -96,6 +77,8 @@ const glow =
       </div>
       <div class="dl" data-date-list data-skip="1" data-count="3" data-empty={listEmpty} set:html={renderDateList(soon.slice(1, 4), listEmpty)} />
     </section>
+
+    <hr class="home-sep" />
 
     <section class="about-row">
       <div class="about">

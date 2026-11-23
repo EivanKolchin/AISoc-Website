@@ -1373,6 +1373,33 @@ a.dl-ev:hover .dl-add {
   text-decoration-color: var(--accent);
 }
 
+/* Past events with a write-up or photos get a small button-style link */
+.dl-recap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px 0 12px;
+  border-radius: 10px;
+  background: rgba(31, 111, 209, 0.09);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+a.dl-ev:hover .dl-recap,
+a.dl-ev:focus-visible .dl-recap {
+  background: var(--accent);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dl-recap {
+    transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  }
+}
+
 .dl-ev--past .dl-date .d,
 .dl-ev--past .dl-title {
   color: var(--soft);

@@ -86,7 +86,7 @@
   }
 }
 
-/* Dark band: news and the four ways in */
+/* Dark band: news */
 
 .home-dark {
   padding: 52px var(--gutter) clamp(64px, 6vw, 96px);
@@ -111,87 +111,6 @@
   background:
     linear-gradient(#0e1116, #0e1116) padding-box,
     var(--grad) border-box;
-}
-
-.bus {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 64px;
-  padding-top: 32px;
-}
-
-.bus::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1.5px;
-  background: var(--grad);
-}
-
-.way {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 24px 24px 22px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
-  text-decoration: none;
-}
-
-.way::before {
-  content: '';
-  position: absolute;
-  left: 35px;
-  top: -34px;
-  width: 1.5px;
-  height: 33px;
-  background: var(--trace);
-}
-
-.way::after {
-  content: '';
-  position: absolute;
-  left: 30px;
-  top: -6px;
-  width: 10px;
-  height: 10px;
-  box-sizing: border-box;
-  background: var(--bg);
-  border: 1.4px solid #7a7d85;
-}
-
-.way--live::before {
-  background: var(--gradv);
-}
-
-.way--live::after {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.way:hover {
-  border-color: transparent;
-  background:
-    linear-gradient(#181b21, #181b21) padding-box,
-    var(--grad) border-box;
-}
-
-.way-name {
-  font-weight: 600;
-  font-size: 26px;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
-.way-desc {
-  font-size: 15.5px;
-  color: var(--muted);
 }
 
 /* Light band */
@@ -221,12 +140,19 @@
 
 /* Who we are, beside Built by members */
 
+.home-sep {
+  height: 1px;
+  margin: clamp(56px, 6vw, 88px) 0 0;
+  border: 0;
+  background: var(--line-strong);
+}
+
 .about-row {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
   gap: 48px clamp(32px, 4vw, 64px);
   align-items: start;
-  margin-top: clamp(80px, 8vw, 128px);
+  margin-top: clamp(56px, 6vw, 88px);
 }
 
 .about {
@@ -403,18 +329,6 @@
 
   .hero-next {
     padding-top: 64px;
-  }
-
-  .bus {
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 0;
-    margin-top: 48px;
-  }
-
-  .bus::before,
-  .way::before,
-  .way::after {
-    display: none;
   }
 
   .upcoming,

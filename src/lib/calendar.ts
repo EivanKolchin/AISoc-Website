@@ -207,6 +207,8 @@ const ICON_CAL =
 const ICON_PIN =
   '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 14.4s4.4-4.1 4.4-7.5a4.4 4.4 0 0 0-8.8 0c0 3.4 4.4 7.5 4.4 7.5z"></path><circle cx="8" cy="6.8" r="1.5"></circle></svg>';
 
+const ICON_PHOTOS =
+  '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="1.8" y="3" width="12.4" height="10" rx="2"></rect><circle cx="5.6" cy="6.6" r="1.2"></circle><path d="M2.4 12l3.6-3.4 2.4 2.2 2.2-2 3.2 3"></path></svg>';
 const ICON_PEOPLE =
   '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="5.6" r="2.4"></circle><path d="M1.8 13.6c.5-2.4 2.2-3.6 4.2-3.6s3.7 1.2 4.2 3.6"></path><path d="M10.6 3.4a2.3 2.3 0 0 1 0 4.4M12.2 10.3c1 .6 1.7 1.7 2 3.3"></path></svg>';
 
@@ -233,7 +235,7 @@ export function renderDateList(list: EventItem[], emptyLine: string, kind: 'upco
         (place ? `<span class="dl-meta">${ICON_PIN}${esc(place)}</span>` : '') +
         (past && ev.stat ? `<span class="dl-meta">${ICON_PEOPLE}${esc(capitalise(ev.stat))}</span>` : '') +
         (!past ? `<span class="dl-act"><a class="dl-add" href="/events/${esc(ev.id)}.ics" download aria-label="Add to calendar: ${esc(ev.title)}">Add to calendar</a>${pageLink}</span>` : '') +
-        (past && link ? `<span class="dl-act"><span class="dl-add">${esc(ev.recapLabel || 'Recap')}</span></span>` : '') +
+        (past && link ? `<span class="dl-act"><span class="dl-recap">${ICON_PHOTOS}<span>${esc(ev.recapLabel || 'Recap')}</span></span></span>` : '') +
         `</${tag}>`
       );
     })

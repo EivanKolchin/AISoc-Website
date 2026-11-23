@@ -19,7 +19,7 @@ export default defineConfig({
     react(),
     keystatic(),
     sitemap({
-      filter: (page) => !/\/(keystatic|404)(\/|$)/.test(new URL(page).pathname),
+      filter: (page) => !/\/(keystatic|404|contact\/(sent|not-sent))(\/|$)/.test(new URL(page).pathname),
       // Internal links have no trailing slash, so the sitemap lists pages the same way.
       serialize: (item) => {
         const url = new URL(item.url);

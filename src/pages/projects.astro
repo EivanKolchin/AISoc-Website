@@ -5,9 +5,11 @@ import ProjectPlate from '../components/ProjectPlate.astro';
 import site from '../data/site.json';
 import projects from '../data/projects.json';
 import { hasLink } from '../lib/events';
-import { emailsFor, mailTo } from '../lib/mail';
+import { emailsFor, mailTo, namesFor } from '../lib/mail';
 
-const mailto = mailTo(emailsFor(projects.lead), 'A project idea');
+// The lead is a committee role, so it follows whoever holds it this year.
+const leadName = namesFor(projects.leadRole);
+const mailto = mailTo(emailsFor(projects.leadRole), 'A project idea');
 ---
 
 <Base title="Projects" description={projects.intro}>
@@ -51,7 +53,10 @@ const mailto = mailTo(emailsFor(projects.lead), 'A project idea');
   <section class="card note" style="margin-bottom: clamp(72px, 7vw, 112px)" aria-labelledby="idea-h">
     <div class="note-text">
       <h2 id="idea-h">Have an idea of your own?</h2>
-      <p>Bring it to {projects.lead}, who leads projects. If it needs a team or a room, that is what the society is for.</p>
+      <p>
+        Bring it to {leadName ? `${leadName}, our ${projects.leadRole}` : 'the committee'}. If it needs a team or a room, that is what the society
+        is for.
+      </p>
     </div>
     <a class="btn btn-s" href={mailto}>Email the projects team</a>
   </section>

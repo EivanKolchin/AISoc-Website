@@ -41,8 +41,9 @@ const year = new Date().getFullYear();
     <div class="foot-col">
       <h2>Contact us</h2>
       <ul>
+        <li><a href="/contact">Send us a message</a></li>
         <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-        <li><a href="/committee">Who to contact on the committee</a></li>
+        <li><a href="/committee#ask-h">Who to contact on the committee</a></li>
       </ul>
     </div>
     <div class="foot-col">
@@ -58,6 +59,6 @@ const year = new Date().getFullYear();
   </div>
   <div class="foot-legal">
     <p>© {year} {site.name}</p>
-    <p class="foot-legal-links"><a href={`mailto:${site.email}`}>Contact</a><a href={site.membership.url}>SUSU page</a><a href="/keystatic" rel="nofollow">Committee login</a></p>
+    <p class="foot-legal-links"><a href="/contact">Contact</a><a href={site.membership.url}>SUSU page</a><a href="/keystatic" rel="nofollow">Committee login</a></p>
   </div>
 </footer>

@@ -302,11 +302,12 @@ svg {
   }
 }
 
-/* Community links as see-through glyph badges */
+/* Community links as see-through glyph badges, three to a row, in the order of site.json
+   (the most used first, so they sit top left). */
 
 .socials {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
   gap: 10px;
 }
 

@@ -169,8 +169,12 @@ In `src/data/committee.json`, add the person to `people`, in the order you want 
 { "name": "Full Name", "otherNames": "", "role": "Role title", "email": "fn1g25@soton.ac.uk", "initials": "FN", "photo": "full-name.jpg", "about": "One sentence on what they look after.", "bio": "" }
 ```
 
+- `role` is how the rest of the site finds them. "Who to ask", the contact form, the
+  Partners contact and the projects lead all name a role, never a person, so after an
+  election you only change `people` and every link follows. Keep the role wording the
+  same from year to year (for example `Treasurer`, `Hackathon Officer`).
 - `email` is their university address. The **Email** button on their card, and any
-  "Who to ask" row that names them, opens a message to them with the society inbox
+  "Who to ask" row for their role, opens a message to them with the society inbox
   copied in.
 - `otherNames` is a name they also go by. It shows as "Also known as ..." under their
   name. Leave it empty if there is none.
@@ -178,8 +182,46 @@ In `src/data/committee.json`, add the person to `people`, in the order you want 
   `""` and the card shows the person's initials instead.
 - `about` shows when someone opens the card. `bio` is an optional longer paragraph,
   written by the person themselves.
-- If the person should be the contact for a topic, also update the matching row in
-  `ask`, using their name exactly as it is written in `people`.
+- The rows in `ask` ("Who to ask") list `roles`, separated by commas, for example
+  `"Hackathon Officer, Hackathon Engineer"`. A row shows and emails whoever holds them.
+
+### The contact form
+
+`/contact` asks what the message is about, where to reply and the message, then
+`src/pages/api/contact.ts` emails it to the society inbox with people copied in by role
+(set in `src/lib/contact.ts`):
+
+| Topic | Copied in |
+| --- | --- |
+| Joining or getting involved | Secretary, President, Vice President |
+| Hackathons and SotonShip | Hackathon Officer, Hackathon Engineer, President, Vice President |
+| Projects and SotonLM | Lead Project Architect, President, Vice President |
+| Workshops | Head of Education, President, Vice President |
+| Sponsoring or partnering | Head of Partnerships, Treasurer, President, Vice President |
+| Money | Treasurer, President, Vice President |
+| Promotion and press | Head of Marketing, Head of Communications, President, Vice President |
+| Something worrying you | Welfare Officer only |
+| Something else | President, Vice President |
+
+The subject starts with the topic in brackets (`[Hackathons] Jane Smith, from the
+website`), so the inbox can sort messages with rules, and Reply goes to the sender.
+`/contact?topic=hackathons` opens the form with a topic already picked.
+
+Emails are delivered by [FormSubmit](https://formsubmit.co), which needs no account:
+
+1. Send one message through the live form. FormSubmit emails `aisoc@soton.ac.uk` an
+   activation link instead of delivering it. Click it; every message after that arrives.
+2. Optional: the activation email gives a random address for the form. Add it in Vercel
+   as `FORMSUBMIT_TO` (Settings, Environment Variables) and redeploy, so the inbox address
+   is not used in requests.
+
+To send through Resend instead (once the society has its own domain), add
+`RESEND_API_KEY` and `CONTACT_FROM` (for example `AI Society <website@your-domain>`, on
+a domain verified in Resend) in Vercel and redeploy. On a laptop nothing is sent: the
+email is printed in the terminal running `astro dev`.
+
+If sending fails, the form offers to open the same email, addressed and filled in, in
+the visitor's own mail app.
 
 The count on the Committee page ("Thirteen students...") updates by itself.
 

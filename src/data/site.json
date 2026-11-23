@@ -26,9 +26,9 @@
   },
   "social": [
     {
-      "id": "discord",
-      "label": "Discord",
-      "url": "https://discord.gg/6ueny233XV"
+      "id": "whatsapp",
+      "label": "WhatsApp group",
+      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=-XhTSvQpPk2-iWadA62p2FTvBOtgb7RLnNtZv6_YvHlUMlhKUU9KMDY1TU0wQUI5NERKR1czWU9ORC4u&route=shorturl"
     },
     {
       "id": "instagram",
@@ -36,14 +36,14 @@
       "url": "https://www.instagram.com/sotonaisoc/"
     },
     {
+      "id": "discord",
+      "label": "Discord",
+      "url": "https://discord.gg/6ueny233XV"
+    },
+    {
       "id": "facebook",
       "label": "Facebook",
       "url": "https://www.facebook.com/sotonaisoc"
-    },
-    {
-      "id": "whatsapp",
-      "label": "WhatsApp group",
-      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=-XhTSvQpPk2-iWadA62p2FTvBOtgb7RLnNtZv6_YvHlUMlhKUU9KMDY1TU0wQUI5NERKR1czWU9ORC4u&route=shorturl"
     },
     {
       "id": "linkedin",

@@ -6,7 +6,7 @@ import site from '../data/site.json';
 import committee from '../data/committee.json';
 import { capitalise, numberWord } from '../lib/events';
 import { findIn } from '../lib/photos';
-import { emailsFor, mailTo } from '../lib/mail';
+import { emailsFor, holders, listLine, mailTo, namesFor, roleList } from '../lib/mail';
 
 // Committee photos, when there are any, live in src/assets/committee/.
 // The dashboard may file uploads in sub-folders, so search the whole folder.
@@ -31,9 +31,16 @@ const people = committee.people.map((person, i) => ({
 }));
 const count = people.length;
 const intro = `${capitalise(numberWord(count))} students, elected for ${committee.year}. Pick anyone to see what they look after.`;
-const askLink = (topic: string, who: string) => mailTo(emailsFor(who), topic);
+// "Who to ask" names roles, so each row follows whoever holds them this year.
+const askRows = committee.ask.map((row) => ({
+  topic: row.topic,
+  who: namesFor(row.roles) || 'The committee',
+  role: listLine(roleList(row.roles)),
+  href: mailTo(emailsFor(row.roles), row.topic),
+  people: holders(row.roles).map((person) => person.name),
+}));
 const mailFor = (person: { email?: string }) => mailTo(person.email ? [person.email] : [], 'Message from the AI Society website');
-const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes(name)).map((row) => row.topic);
+const asksFor = (name: string) => askRows.filter((row) => row.people.includes(name)).map((row) => row.topic);
 ---
 
 <Base title="Meet the committee" description={intro}>
@@ -125,8 +132,8 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
     <h2 class="h-sec" id="ask-h">Who to ask</h2>
     <div class="ask-list">
       {
-        committee.ask.map((row) => (
-          <a class="ask" href={askLink(row.topic, row.who)}>
+        askRows.map((row) => (
+          <a class="ask" href={row.href}>
             <span class="topic">{row.topic}</span>
             <span class="who">{row.who}</span>
             <span class="role">{row.role}</span>

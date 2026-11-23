@@ -1,0 +1,127 @@
+---
+// The contact form. Three questions (what it is about, where to reply, the message), then
+// /api/contact sends it to the society inbox with the right committee members copied in.
+// Without JavaScript the three questions show as one ordinary form.
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import '../styles/contact.css';
+import { OTHER, TOPICS, type Topic, readersLine, recipientsFor } from '../lib/contact';
+
+const description = `Send a message to ${site.name}. It reaches the society inbox and the committee members who look after what it is about.`;
+const option = (topic: Topic) => ({
+  value: topic.id,
+  'data-ask': topic.ask,
+  'data-placeholder': topic.placeholder,
+  'data-tag': topic.tag,
+  'data-readers': readersLine(topic),
+  'data-cc': recipientsFor(topic).cc.join(','),
+});
+const firstReaders = readersLine(OTHER);
+---
+
+<Base title="Contact us" description={description}>
+  <div class="page-head">
+    <div class="page-head-text">
+      <h1 class="h-page">Contact us</h1>
+      <p>
+        Pick what your message is about. It goes to the society inbox, and the committee members who look after that are copied in, so it reaches the
+        right person straight away.
+      </p>
+    </div>
+  </div>
+
+  <div class="contact block block--last">
+    <form class="cf" method="post" action="/api/contact" novalidate data-contact data-inbox={site.email}>
+      <div class="cf-top">
+        <div class="cf-progress" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p class="cf-count" data-cf-count>Step 1 of 3</p>
+      </div>
+
+      <fieldset class="cf-step" data-step="0">
+        <legend class="cf-q">What is it about?</legend>
+        <div class="cf-opts">
+          {
+            TOPICS.map((topic) => (
+              <label class="cf-opt">
+                <input type="radio" name="topic" {...option(topic)} />
+                <span class="cf-opt-name">{topic.name}</span>
+                <span class="cf-opt-note">{topic.note}</span>
+              </label>
+            ))
+          }
+          <label class="cf-opt cf-opt--wide">
+            <input type="radio" name="topic" {...option(OTHER)} />
+            <span class="cf-opt-name">{OTHER.name}</span>
+            <span class="cf-opt-note">{OTHER.note}</span>
+          </label>
+        </div>
+        <div class="cf-actions">
+          <button class="btn btn-p" type="button" data-cf-next>Continue</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="cf-step" data-step="1">
+        <legend class="cf-q">Where should we reply?</legend>
+        <p class="cf-lead">We answer by email, so this is how we write back to you.</p>
+        <label class="cf-field">
+          <span>Your name</span>
+          <input name="name" autocomplete="name" maxlength="80" required />
+        </label>
+        <label class="cf-field">
+          <span>Your email</span>
+          <input name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" placeholder="you@example.com" required />
+        </label>
+        <div class="cf-actions">
+          <button class="btn btn-s" type="button" data-cf-back>Back</button>
+          <button class="btn btn-p" type="button" data-cf-next>Continue</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="cf-step" data-step="2">
+        <legend class="cf-q" data-cf-ask>{OTHER.ask}</legend>
+        <label class="cf-field">
+          <span>Your message</span>
+          <textarea name="message" rows="7" maxlength="4000" placeholder={OTHER.placeholder} required></textarea>
+        </label>
+        <p class="cf-readers" data-cf-readers>
+          It goes to {site.email}{firstReaders && `, with ${firstReaders} copied in`}.
+        </p>
+        <label class="cf-trap" aria-hidden="true">
+          Leave this empty
+          <input name="website" tabindex="-1" autocomplete="off" />
+        </label>
+        <div class="cf-actions">
+          <button class="btn btn-s" type="button" data-cf-back>Back</button>
+          <button class="btn btn-p" type="submit" data-cf-send>Send message</button>
+        </div>
+      </fieldset>
+
+      <div class="cf-step cf-done" data-step="3" hidden>
+        <h2 class="cf-q" tabindex="-1">Sent. Thank you<span data-cf-name></span>.</h2>
+        <p data-cf-done-text>It is in the society inbox.</p>
+        <div class="cf-actions">
+          <button class="btn btn-s" type="button" data-cf-again>Write another</button>
+          <a class="btn btn-p" href="/">Back to the home page</a>
+        </div>
+      </div>
+
+      <p class="cf-hint" id="cf-hint" role="status" aria-live="polite" data-cf-hint></p>
+      <a class="btn btn-o cf-fallback" href={`mailto:${site.email}`} data-cf-fallback hidden>Open it in your email app</a>
+    </form>
+
+    <aside class="contact-aside" aria-labelledby="direct-h">
+      <h2 class="h-sec" id="direct-h">Or email us</h2>
+      <p class="ca-address">
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <button class="ca-copy" type="button" data-copy={site.email} aria-label={`Copy ${site.email}`}>Copy</button>
+      </p>
+      <p>
+        Want one person in particular? <a class="lnk" href="/committee#ask-h">Who to ask</a> lists who looks after what this year, with their emails.
+      </p>
+    </aside>
+  </div>
+</Base>
+
+<script>
+  import '../scripts/contact.ts';
+</script>

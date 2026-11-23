@@ -135,33 +135,27 @@
   "ask": [
     {
       "topic": "Sponsoring an event, or speaking at one",
-      "who": "Faran Afzal",
-      "role": "Head of Partnerships"
+      "roles": "Head of Partnerships"
     },
     {
       "topic": "Workshops, or teaching one",
-      "who": "Jamie Simmons",
-      "role": "Head of Education"
+      "roles": "Head of Education"
     },
     {
       "topic": "Joining or starting a project",
-      "who": "Eivan Kolchin Rivas",
-      "role": "Lead Project Architect"
+      "roles": "Lead Project Architect"
     },
     {
       "topic": "Hackathons",
-      "who": "Mehmet Icen, Sumayea Akter",
-      "role": "Hackathon Officer and Hackathon Engineer"
+      "roles": "Hackathon Officer, Hackathon Engineer"
     },
     {
       "topic": "Something that is worrying you",
-      "who": "Zola Adonsi",
-      "role": "Welfare Officer"
+      "roles": "Welfare Officer"
     },
     {
       "topic": "Anything else",
-      "who": "Nithun Sundarrajan",
-      "role": "President"
+      "roles": "President"
     }
   ]
 }

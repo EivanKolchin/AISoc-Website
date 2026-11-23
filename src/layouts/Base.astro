@@ -17,9 +17,11 @@ interface Props {
   hero?: boolean;
   /** Structured data for search engines (see src/lib/seo.ts). */
   schema?: Record<string, unknown>[];
+  /** Keep this page out of search results (for example the form's "sent" page). */
+  noindex?: boolean;
 }
 
-const { title, description = site.tagline, home = false, hero = false, schema = [] } = Astro.props;
+const { title, description = site.tagline, home = false, hero = false, schema = [], noindex = false } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name}, ${site.university}`;
 
 // The one address search engines should use for this page (no trailing slash, like the links).
@@ -37,6 +39,7 @@ const previewUrl = new URL(preview.src, Astro.site).href;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="en_GB" />

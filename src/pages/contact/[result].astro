@@ -1,0 +1,32 @@
+---
+// Where the contact form lands without JavaScript: /contact/sent and /contact/not-sent.
+// With JavaScript the form shows these answers in place instead.
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site.json';
+
+export function getStaticPaths() {
+  return [{ params: { result: 'sent' } }, { params: { result: 'not-sent' } }];
+}
+
+const sent = Astro.params.result === 'sent';
+---
+
+<Base title={sent ? 'Message sent' : 'Message not sent'} noindex>
+  <div class="page-head">
+    <div class="page-head-text">
+      <h1 class="h-page">{sent ? 'Sent. Thank you.' : 'That did not go through.'}</h1>
+      <p>
+        {
+          sent
+            ? 'Your message is in the society inbox, and the committee members who look after it have a copy. We will reply by email.'
+            : `Nothing was sent. Check that your name, email and message are filled in and try again, or email ${site.email} yourself.`
+        }
+      </p>
+    </div>
+    <div class="page-head-tools">
+      {sent ? <a class="btn btn-p" href="/">Back to the home page</a> : <a class="btn btn-p" href="/contact">Back to the form</a>}
+      {!sent && <a class="btn btn-s" href={`mailto:${site.email}`}>Email {site.email}</a>}
+    </div>
+  </div>
+  <div class="block--last"></div>
+</Base>

@@ -168,7 +168,10 @@ export default config({
           fields.object({
             name: text('Name'),
             otherNames: text('Other names', 'Optional, a name they also go by. Shown as "Also known as …"'),
-            role: text('Role'),
+            role: text(
+              'Role',
+              'Who to ask, the contact form, Partners and Projects find people by their role, so keep the wording the same each year (for example Treasurer, Hackathon Officer).',
+            ),
             email: text('Email', 'Their university email. The Email button writes to it with the society inbox copied in.'),
             initials: text('Initials', 'Shown on their card until there is a photo. Leave empty to use the first letters of their name.'),
             photo: fields.image({ label: 'Photo', description: 'A square photo works best', directory: 'src/assets/committee' }),
@@ -180,8 +183,10 @@ export default config({
         ask: fields.array(
           fields.object({
             topic: text('Topic'),
-            who: text('Who', 'Names exactly as written under Members, separated by commas. The row emails them.'),
-            role: text('Their role'),
+            roles: text(
+              'Roles',
+              'Committee roles exactly as written under Members, separated by commas, for example "Hackathon Officer, Hackathon Engineer". The row shows and emails whoever holds them, so it stays right after each election.',
+            ),
           }),
           { label: 'Who to ask', itemLabel: (props) => props.fields.topic.value },
         ),
@@ -205,7 +210,10 @@ export default config({
           { label: 'Partners', itemLabel: (props) => props.fields.name.value },
         ),
         sotonshipNote: long('Note about SotonShip sponsors'),
-        contact: fields.object({ name: text('Name'), role: text('Role') }, { label: 'Partnerships contact' }),
+        contact: fields.object(
+          { role: text('Committee role', 'Exactly as written under Committee, Members. The page shows and emails whoever holds it.') },
+          { label: 'Partnerships contact' },
+        ),
         audience: fields.object(
           {
             asOf: text('Figures as of'),
@@ -359,7 +367,7 @@ export default config({
       format: { data: 'json' },
       schema: {
         intro: long('Introduction'),
-        lead: text('Projects lead'),
+        leadRole: text('Projects lead (committee role)', 'Exactly as written under Committee, Members, for example Lead Project Architect.'),
         flagships: fields.array(
           fields.object({
             id: text('ID'),

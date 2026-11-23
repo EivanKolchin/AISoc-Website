@@ -6,12 +6,12 @@ import { sitePhoto } from '../lib/photos';
 import Calendar from '../components/Calendar.astro';
 import { SOCIAL_ICONS } from '../lib/icons';
 import site from '../data/site.json';
-import eventsData from '../data/events.json';
+import { allEvents } from '../lib/event-data';
 import workshops from '../data/workshops.json';
-import { type EventItem, eventList, capitalise, numberWord, past, upcoming } from '../lib/events';
+import { type EventItem, capitalise, numberWord, past, upcoming } from '../lib/events';
 import { renderEventList, renderNextEvent } from '../lib/calendar';
 
-const events = eventList(eventsData.events);
+const events = allEvents;
 const now = new Date();
 const comingUp = upcoming(events, now);
 const earlier = past(events, now);

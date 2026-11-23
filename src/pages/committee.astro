@@ -13,7 +13,22 @@ import { emailsFor, mailTo } from '../lib/mail';
 const photoFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/committee/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true });
 const photoFor = (file: string | null) => findIn(photoFiles, file);
 
-const people = committee.people.map((person, i) => ({ ...person, id: `member-${i}`, image: photoFor(person.photo), glow: i % 4 }));
+// The dashboard leaves out empty fields, so initials may be missing: use the name's first letters.
+const initialsOf = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .filter((_, i, all) => i === 0 || i === all.length - 1)
+    .join('')
+    .toUpperCase();
+const people = committee.people.map((person, i) => ({
+  ...person,
+  initials: person.initials || initialsOf(person.name),
+  id: `member-${i}`,
+  image: photoFor(person.photo),
+  glow: i % 4,
+}));
 const count = people.length;
 const intro = `${capitalise(numberWord(count))} students, elected for ${committee.year}. Pick anyone to see what they look after.`;
 const askLink = (topic: string, who: string) => mailTo(emailsFor(who), topic);

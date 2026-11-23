@@ -78,6 +78,7 @@ function eventLines(ev: EventItem, stamp: string): string[] {
   lines.push(`SUMMARY:${text(ev.title)}`);
   if (ev.location) lines.push(`LOCATION:${text(ev.location)}`);
   const about: string[] = [];
+  if (ev.blurb) about.push(ev.blurb);
   if (ev.level) about.push(ev.level + '.');
   if (ev.with.length) about.push(`With ${ev.with.join(', ')}.`);
   if (ev.note) about.push(ev.note);

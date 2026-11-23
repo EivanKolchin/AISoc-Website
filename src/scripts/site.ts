@@ -2,8 +2,8 @@
 // calendar, the next-event card, the event lists and the Calendar/List switch.
 // Pages are already complete without this script; it only brings them up to date.
 
-import eventsData from '../data/events.json';
-import { type EventItem, eventList, addDays, past, startOfDay, upcoming } from '../lib/events';
+import { allEvents } from '../lib/event-data';
+import { type EventItem, addDays, past, startOfDay, upcoming } from '../lib/events';
 import {
   type CalView,
   afterWeekLine,
@@ -15,7 +15,7 @@ import {
   renderNextEvent,
 } from '../lib/calendar';
 
-const events = eventList(eventsData.events);
+const events = allEvents;
 const now = new Date();
 const today = startOfDay(now);
 const nextEvent = upcoming(events, now)[0] ?? null;

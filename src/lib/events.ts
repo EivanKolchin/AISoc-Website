@@ -1,11 +1,12 @@
 // Date and event helpers shared by the build (Astro) and the browser (calendar script).
-// Event times in src/data/events.json are UK wall-clock times, written without an offset.
+// Each event is a file in src/data/events/. Times are UK wall-clock times, written
+// without an offset.
 
 export interface EventItem {
+  /** The file name, which is also the address of the event's calendar file. */
   id: string;
   title: string;
   short: string;
-  type: string;
   level: string;
   /** "YYYY-MM-DD" (time not known) or "YYYY-MM-DDTHH:mm" */
   start: string;
@@ -14,13 +15,17 @@ export interface EventItem {
   locationShort: string;
   with: string[];
   note: string;
-  stat: string;
-  summary: string;
   blurb: string;
   page: string;
+  stat: string;
   recap: string;
   recapLabel: string;
 }
+
+/** An event file as the dashboard writes it: the after-the-event details sit in a group. */
+export type EventFile = Partial<Omit<EventItem, 'stat' | 'recap' | 'recapLabel'>> & {
+  after?: Partial<Pick<EventItem, 'stat' | 'recap' | 'recapLabel'>>;
+};
 
 export const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 export const WD_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -29,34 +34,34 @@ export const MON_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'
 
 const EMPTY_EVENT: Omit<EventItem, 'id' | 'title' | 'start'> = {
   short: '',
-  type: '',
   level: '',
   end: null,
   location: '',
   locationShort: '',
   with: [],
   note: '',
-  stat: '',
-  summary: '',
   blurb: '',
   page: '',
+  stat: '',
   recap: '',
   recapLabel: '',
 };
 
 /**
- * Events as read from src/data/events.json. The dashboard leaves out fields that are
- * empty when it saves, so fill them back in here.
+ * Turns event files into the list the pages use, in date order. The dashboard leaves
+ * out fields that are empty when it saves, so they are filled back in here.
  */
-export function eventList(raw: ReadonlyArray<Partial<EventItem>>): EventItem[] {
+export function eventList(raw: ReadonlyArray<EventFile>): EventItem[] {
   return raw
     .filter((ev) => ev.id && ev.title && ev.start)
-    .map((ev) => {
-      const item = { ...EMPTY_EVENT, ...ev } as EventItem;
+    .map(({ after, ...ev }) => {
+      const item = { ...EMPTY_EVENT, ...ev, ...after } as EventItem;
       if (!item.short) item.short = item.title;
       if (!item.end) item.end = null;
+      if (!Array.isArray(item.with)) item.with = [];
       return item;
-    });
+    })
+    .sort((a, b) => a.start.localeCompare(b.start));
 }
 
 export function esc(value: string | null | undefined): string {

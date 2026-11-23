@@ -2,21 +2,8 @@
   "name": "Southampton AI Society",
   "shortName": "AI Society",
   "university": "University of Southampton",
-  "legalName": "University of Southampton Artificial Intelligence Society",
   "tagline": "Making AI easy for everyone at Southampton.",
-  "intro": "We make AI easy to start, then we build things with it. Open to every course. Workshops are on Thursdays at 18:00.",
-  "statement": "We make AI easy to start for every student at Southampton, then build real things with it together.",
-  "notice": {
-    "text": "Weekly workshops run on Thursdays, 18:00 to 19:00, in Building 100, room 3023.",
-    "url": "/events#workshops"
-  },
-  "about": {
-    "who": "The University of Southampton's AI society: students from every course, run by a student committee. Membership is free through SUSU.",
-    "what": "Weekly workshops, from a first line of Python to diffusion models. Talks from researchers and engineers. Hackathons, and year-long projects like SotonLM.",
-    "aim": "To make AI easy for everyone at Southampton, then give anyone who wants more something real to build."
-  },
   "email": "aisoc@soton.ac.uk",
-  "updated": "2026-11-23",
   "workshopSlot": {
     "day": "Thursday",
     "start": "18:00",
@@ -36,10 +23,35 @@
     "instagramFollowers": 1602
   },
   "social": [
-    { "id": "discord", "label": "Discord", "url": "https://discord.gg/6ueny233XV", "hero": true },
-    { "id": "instagram", "label": "Instagram", "url": "https://www.instagram.com/sotonaisoc/", "hero": true },
-    { "id": "whatsapp", "label": "WhatsApp", "url": "#", "hero": true },
-    { "id": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/company/aisoc", "hero": false },
-    { "id": "github", "label": "GitHub", "url": "https://github.com/aisoc", "hero": false }
+    {
+      "id": "discord",
+      "label": "Discord",
+      "url": "https://discord.gg/6ueny233XV",
+      "hero": true
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "https://www.instagram.com/sotonaisoc/",
+      "hero": true
+    },
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "url": "#",
+      "hero": true
+    },
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/company/aisoc",
+      "hero": false
+    },
+    {
+      "id": "github",
+      "label": "GitHub",
+      "url": "https://github.com/aisoc",
+      "hero": false
+    }
   ]
 }

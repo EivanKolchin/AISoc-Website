@@ -1,0 +1,12 @@
+{
+  "notice": {
+    "text": "Weekly workshops run on Thursdays, 18:00 to 19:00, in Building 100, room 3023.",
+    "url": "/events#workshops"
+  },
+  "statement": "We make AI easy to start for every student at Southampton, then build real things with it together.",
+  "about": {
+    "who": "The University of Southampton's AI society: students from every course, run by a student committee. Membership is free through SUSU.",
+    "what": "Weekly workshops, from a first line of Python to diffusion models. Talks from researchers and engineers. Hackathons, and year-long projects like SotonLM.",
+    "aim": "To make AI easy for everyone at Southampton, then give anyone who wants more something real to build."
+  }
+}

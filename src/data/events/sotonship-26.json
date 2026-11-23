@@ -1,0 +1,18 @@
+{
+  "title": "SotonShip 26",
+  "start": "2026-10-16T17:00",
+  "end": "2026-10-18T20:30",
+  "location": "Barclays Eagle Labs, Southampton",
+  "locationShort": "Eagle Labs",
+  "short": "SotonShip 26",
+  "level": "",
+  "with": [],
+  "note": "",
+  "blurb": "120 builders spent 48 hours at Barclays Eagle Labs turning ideas into working AI products.",
+  "page": "https://www.sotonship.space",
+  "after": {
+    "stat": "120 builders",
+    "recap": "/sotonship",
+    "recapLabel": "Look back"
+  }
+}

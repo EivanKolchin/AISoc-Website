@@ -10,12 +10,22 @@ date: use the dashboard, or edit the data files described below.
 ## Edit the site from the dashboard
 
 Committee members sign in with **Committee login** at the bottom of every page (or go
-straight to `/keystatic`). Sign in with your GitHub account. From there you can change
-events, the committee, partners, the Gallery, SotonShip and its winners, the News box
-on the home page and the other pages, and upload photos.
+straight to `/keystatic`). Sign in with your GitHub account. The menu is ordered by how
+often things change:
+
+| Section                  | What you do there                                                  |
+| :----------------------- | :----------------------------------------------------------------- |
+| Events                   | **Add** a new event, or open one from the list to change it        |
+| Home page and News       | The News box, the big statement at the top, "Who we are"           |
+| Gallery                  | Add photos and say which event they are from                       |
+| Committee, Partners      | People, emails, photos, partner logos                              |
+| SotonShip and hackathons | Each hackathon, its winners and sponsors                           |
+| Projects, Workshops      | The Projects page and the workshop library                         |
+| Society details          | Name, email, the weekly workshop slot, membership, social links    |
 
 Pressing **Save** commits the change to the GitHub repository. Vercel then rebuilds the
-site, and the change is live a minute or two later.
+site, and the change is live a minute or two later. Dates are checked as you type, so a
+date in the wrong format is caught before it is saved.
 
 To be able to sign in, your GitHub account needs write access to
 [EivanKolchin/AISoc-Website](https://github.com/EivanKolchin/AISoc-Website). Ask whoever
@@ -82,8 +92,9 @@ The dashboard edits these files in `src/data/`, and you can also edit them by ha
 
 | File             | What is in it                                                                   |
 | :--------------- | :------------------------------------------------------------------------------ |
-| `site.json`      | Society name, email, home statement, News box, "Who we are" text, workshop slot, social links |
-| `events.json`    | Every event, past and future. Drives the calendar, the lists and the .ics files |
+| `events/`        | One file per event, past and future. Drives the calendar, the lists and the .ics files |
+| `home.json`      | The News box, the home page statement and "Who we are"                          |
+| `site.json`      | Society name, email, workshop slot, membership, numbers and social links        |
 | `committee.json` | Committee members (photo, role, email, what they look after), and "Who to ask"  |
 | `hackathons.json`| The SotonShip page: every hackathon we ran, winners, and other societies' ones  |
 | `projects.json`  | The large project panels and the smaller builds                                 |
@@ -99,41 +110,38 @@ Two rules for these files:
 
 ### Add an event
 
-In the dashboard, open **Events** and press **Add**. By hand, open
-`src/data/events.json` and copy an existing entry inside `events`:
+In the dashboard, open **Events** and press **Add**. Only the title and start are
+required; leave anything you do not know yet empty.
+
+By hand, add a file to `src/data/events/`. The file name becomes the event's address
+(`/events/<name>.ics`), so use lower case with hyphens, for example
+`thursday-workshop-2026-12-10.json`:
 
 ```json
 {
-  "id": "thursday-workshop-2026-12-10",
   "title": "Thursday workshop",
-  "short": "Workshop",
-  "type": "Workshop",
-  "level": "Every week",
   "start": "2026-12-10T18:00",
   "end": "2026-12-10T19:00",
-  "location": "B100/3023",
+  "location": "Building 100, room 3023",
   "locationShort": "B100/3023",
+  "short": "Workshop",
+  "level": "Every week",
   "with": [],
   "note": "Bring a laptop.",
-  "stat": "",
-  "summary": "",
   "blurb": "",
   "page": "#",
-  "recap": "#",
-  "recapLabel": "Recap"
+  "after": { "stat": "", "recap": "#", "recapLabel": "" }
 }
 ```
 
-- `id` must be unique, lower case, with hyphens. It becomes the address of the
-  calendar file (`/events/<id>.ics`).
 - `start` and `end` are UK times written as `YYYY-MM-DDTHH:mm`. If the time is not
   known, write only the date (`"2026-12-10"`) and leave `end` empty.
-- `short` is the name shown on the calendar square, so keep it to a few words.
-- `with` lists co-hosts. `note` is one short practical sentence.
-- `page` is the sign-up or event page. `recap` is where photos or a write-up live once
-  it is over. Leave either as `"#"` until you have it.
-- Once an event has happened, fill in `stat` (for example `"90 came"`), `summary` (the
-  line shown in "Past events") and `blurb` (a one-sentence description).
+- `short` is the name on the calendar square. Leave it empty to use the title.
+- `with` lists co-hosts. `note` is one short practical sentence. `blurb` goes into the
+  "Add to calendar" file.
+- `page` is the sign-up or event page. Leave it as `"#"` until you have it.
+- Once an event has happened, fill in `after`: `stat` (for example `"90 came"`), and
+  `recap` with `recapLabel` to give it a button under "Past events".
 
 You never move an event from "coming up" to "past": the site works that out from the
 date. The home page next-event bar and "Upcoming events" list, the calendar, and the
@@ -246,7 +254,7 @@ old `/workshops` address redirects there (set in `astro.config.mjs`).
 These are marked `"#"` or empty in the data files, so the site currently hides them:
 
 - `site.json`: the WhatsApp community link.
-- `events.json`: the event page link (`page`) for every event except SotonShip 26, and
+- `events/`: the event page link (`page`) for every event except SotonShip 26, and
   the recap link (`recap`) for "Can AI save the planet?" and "Someone Should Probably
   Build That". The time and place of "Someone Should Probably Build That" are also
   missing, so it shows as an all-day event.
@@ -259,8 +267,8 @@ These are filled in but should be checked by someone who knows:
   before 2024 to 2025 (currently blank).
 - `projects.json`: the SotonShip gallery address and photo count, and whether the two
   Bunfight demos have a live address to link to instead of the code.
-- `site.json`: the Discord member count (`stats`, shown on the Discord badge), and
-  `updated`. Change both whenever the numbers are refreshed.
+- `site.json`: the Discord and Instagram counts (`stats`). Update `asOf` whenever the
+  numbers are refreshed.
 
 Assets we do not have yet:
 

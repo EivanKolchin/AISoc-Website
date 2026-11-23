@@ -1,0 +1,18 @@
+{
+  "title": "Thursday workshop",
+  "start": "2026-12-03T18:00",
+  "end": "2026-12-03T19:00",
+  "location": "B100/3023",
+  "locationShort": "B100/3023",
+  "short": "Workshop",
+  "level": "Every week",
+  "with": [],
+  "note": "Bring a laptop.",
+  "blurb": "",
+  "page": "#",
+  "after": {
+    "stat": "",
+    "recap": "#",
+    "recapLabel": "Recap"
+  }
+}

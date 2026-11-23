@@ -1,10 +1,10 @@
 // /events/<id>.ics: one file per event, for "Add to calendar".
 import type { APIRoute, GetStaticPaths } from 'astro';
-import eventsData from '../../data/events.json';
-import { type EventItem, eventList } from '../../lib/events';
+import { allEvents } from '../../lib/event-data';
+import type { EventItem } from '../../lib/events';
 import { buildCalendar } from '../../lib/ics';
 
-const events = eventList(eventsData.events);
+const events = allEvents;
 
 export const getStaticPaths: GetStaticPaths = () => events.map((event) => ({ params: { id: event.id }, props: { event } }));
 

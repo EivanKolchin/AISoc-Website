@@ -1,93 +1,123 @@
-// The committee dashboard at /keystatic. Each section edits one file in src/data.
+// The committee dashboard at /keystatic. Events are one file each in src/data/events/;
+// every other section edits one file in src/data.
 // On your own computer (npm run dev) it saves straight to the files. On the live site it
 // signs you in with GitHub and saves to the repository, which rebuilds the site.
 // `npm run dashboard:setup` runs the GitHub version locally, which is needed once to
 // create the GitHub App the login uses (see README).
-import { config, fields, singleton } from '@keystatic/core';
+import { createElement } from 'react';
+import { collection, config, fields, singleton } from '@keystatic/core';
+import gallery from './src/data/gallery.json';
 
 const useGitHub = import.meta.env.PROD || import.meta.env.MODE === 'github';
 
 const text = (label: string, description?: string) => fields.text({ label, description });
 const long = (label: string, description?: string) => fields.text({ label, description, multiline: true });
-const link = (label: string, description = 'A full web address, a page on this site such as /events, or # if there is none yet') =>
+const link = (label: string, description = 'A full web address, a page on this site such as /events, or # if there is none yet.') =>
   fields.text({ label, description });
+
+const DATE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/;
+const DATE_HELP = 'Write the date as 2026-12-10, or the date and UK time as 2026-12-10T18:00.';
+const galleryEventIds = (gallery.events as { id: string }[]).map((ev) => ev.id).join(', ');
 
 export default config({
   storage: useGitHub ? { kind: 'github', repo: 'EivanKolchin/AISoc-Website' } : { kind: 'local' },
   ui: {
-    brand: { name: 'AI Society dashboard' },
+    brand: {
+      name: 'AI Society',
+      mark: () => createElement('img', { src: '/logo-mark.png', alt: '', height: 28, style: { height: 28, width: 'auto', display: 'block' } }),
+    },
+    // Ordered by how often each part changes.
     navigation: {
-      'This term': ['events', 'site'],
+      'Week to week': ['events', 'home', 'gallery'],
       People: ['committee', 'partners'],
-      'Photos and hackathons': ['gallery', 'hackathons'],
-      'Other pages': ['projects', 'workshops'],
+      Hackathons: ['hackathons'],
+      'Other pages': ['projects', 'workshops', 'site'],
     },
   },
-  singletons: {
-    events: singleton({
+  collections: {
+    events: collection({
       label: 'Events',
-      path: 'src/data/events',
+      slugField: 'title',
+      path: 'src/data/events/*',
       format: { data: 'json' },
+      columns: ['title', 'start'],
       schema: {
-        events: fields.array(
-          fields.object({
-            id: text('ID', 'Lower case with hyphens, unique, for example thursday-workshop-2026-12-10. It becomes the calendar file name.'),
-            title: text('Title'),
-            short: text('Short name', 'A few words for the calendar square'),
-            type: text('Type', 'For example Workshop, Talk, Hackathon'),
-            level: text('Level', 'Optional, for example Beginners welcome'),
-            start: text('Starts', 'UK time as YYYY-MM-DDTHH:mm, for example 2026-12-10T18:00. Just the date if the time is not known.'),
-            end: text('Ends', 'Same format as Starts. Leave empty if not known.'),
-            location: text('Where', 'For example Building 100, room 3023, or Online'),
-            locationShort: text('Where, short', 'For example B100/3023'),
-            with: fields.array(text('Co-host'), { label: 'Run with', itemLabel: (props) => props.value || 'Co-host' }),
-            note: text('Note', 'One short practical sentence, for example Bring a laptop.'),
-            stat: text('Attendance', 'After the event, for example 90 came'),
-            summary: text('Summary', 'One line shown in the lists'),
-            blurb: long('Description'),
-            page: link('Sign-up or event page'),
-            recap: link('Recap or photos', 'Where the write-up or photos are once it is over, or #'),
-            recapLabel: text('Recap button text', 'For example Look back'),
-          }),
-          { label: 'Events', itemLabel: (props) => `${props.fields.start.value.slice(0, 10)}  ${props.fields.title.value}` },
+        title: fields.slug({
+          name: { label: 'Title', validation: { isRequired: true } },
+          slug: {
+            label: 'Web address',
+            description: 'Made from the title. It names the event\'s "Add to calendar" file, so leave it alone once the event is announced.',
+          },
+        }),
+        start: fields.text({
+          label: 'Starts',
+          description: `${DATE_HELP} Use just the date if the time is not known yet.`,
+          validation: { isRequired: true, pattern: { regex: DATE, message: DATE_HELP } },
+        }),
+        end: fields.text({
+          label: 'Ends',
+          description: 'Same format as Starts. Leave empty if not known.',
+          validation: { pattern: { regex: /^(\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?)?$/, message: DATE_HELP } },
+        }),
+        location: text('Where', 'In full, for example "Building 100, room 3023", or Online.'),
+        locationShort: text('Where, short', 'For small spaces, for example B100/3023.'),
+        short: text('Name on the calendar', 'A few words for the small calendar square. Leave empty to use the title.'),
+        level: text('Who it is for', 'Optional, for example "Beginners welcome".'),
+        with: fields.array(text('Society or company'), { label: 'Run with', itemLabel: (props) => props.value || 'Co-host' }),
+        note: text('Note', 'One short practical line, for example "Bring a laptop."'),
+        blurb: long('Description', 'A sentence or two. It goes into the "Add to calendar" file.'),
+        page: link('Sign-up or event page'),
+        after: fields.object(
+          {
+            stat: text('How many came', 'For example "90 came" or "120 builders".'),
+            recap: link('Photos or write-up', 'Where people can see what happened, for example /gallery or /sotonship. Adds a button to the event under Past events.'),
+            recapLabel: text('Button text', 'For example "Look back" or "See the photos".'),
+          },
+          { label: 'After the event' },
         ),
       },
     }),
-
-    site: singleton({
-      label: 'Home page and society details',
-      path: 'src/data/site',
+  },
+  singletons: {
+    home: singleton({
+      label: 'Home page and News',
+      path: 'src/data/home',
       format: { data: 'json' },
       schema: {
-        name: text('Society name'),
-        shortName: text('Short name'),
-        university: text('University'),
-        legalName: text('Full legal name'),
-        tagline: text('Tagline'),
-        statement: long('Home page statement', 'The large sentence at the top of the home page'),
-        intro: long('Short introduction'),
         notice: fields.object(
           {
-            text: long('News text'),
-            url: link('News link'),
+            text: long('News', 'The box under the top of the home page. Leave empty to hide the box.'),
+            url: link('Where the box links to'),
           },
-          { label: 'News box on the home page' },
+          { label: 'News box' },
         ),
+        statement: long('Statement', 'The large sentence at the top of the home page.'),
         about: fields.object(
           {
             who: long('Who we are'),
             what: long('What we do'),
             aim: long('What we aim for'),
           },
-          { label: 'Who we are block' },
+          { label: 'Who we are' },
         ),
-        email: text('Email'),
-        updated: text('Last updated', 'YYYY-MM-DD'),
+      },
+    }),
+
+    site: singleton({
+      label: 'Society details',
+      path: 'src/data/site',
+      format: { data: 'json' },
+      schema: {
+        name: text('Society name', 'Used in page titles, for example "Southampton AI Society".'),
+        shortName: text('Short name', 'Shown in the header beside the logo.'),
+        university: text('University'),
+        tagline: text('Description for search engines', 'One sentence shown under the site in Google results.'),
+        email: text('Society email', 'Copied in on every email sent from the site.'),
         workshopSlot: fields.object(
           {
-            day: text('Day'),
-            start: text('Starts', 'HH:mm'),
-            end: text('Ends', 'HH:mm'),
+            day: text('Day', 'For example Thursday.'),
+            start: text('Starts', 'For example 18:00.'),
+            end: text('Ends', 'For example 19:00.'),
             room: text('Room'),
             campus: text('Campus'),
             bring: text('What to bring'),
@@ -98,7 +128,7 @@ export default config({
         membership: fields.object({ label: text('Label'), url: link('SUSU page') }, { label: 'Membership' }),
         stats: fields.object(
           {
-            asOf: text('Figures as of', 'YYYY-MM-DD'),
+            asOf: text('Figures as of', 'The date you counted them, for example 2026-11-23.'),
             discordMembers: fields.integer({ label: 'Discord members' }),
             instagramFollowers: fields.integer({ label: 'Instagram followers' }),
           },
@@ -138,7 +168,7 @@ export default config({
             otherNames: text('Other names', 'Optional, a name they also go by. Shown as "Also known as …"'),
             role: text('Role'),
             email: text('Email', 'Their university email. The Email button writes to it with the society inbox copied in.'),
-            initials: text('Initials', 'Shown when there is no photo'),
+            initials: text('Initials', 'Shown on their card until there is a photo. Leave empty to use the first letters of their name.'),
             photo: fields.image({ label: 'Photo', description: 'A square photo works best', directory: 'src/assets/committee' }),
             about: long('What they look after'),
             bio: long('Bio', 'Optional, written by the person'),
@@ -148,7 +178,7 @@ export default config({
         ask: fields.array(
           fields.object({
             topic: text('Topic'),
-            who: text('Who'),
+            who: text('Who', 'Names exactly as written under Members, separated by commas. The row emails them.'),
             role: text('Their role'),
           }),
           { label: 'Who to ask', itemLabel: (props) => props.fields.topic.value },
@@ -210,7 +240,7 @@ export default config({
         photos: fields.array(
           fields.object({
             file: fields.image({ label: 'Photo', directory: 'src/assets/gallery', validation: { isRequired: true } }),
-            event: text('Event ID', 'One of the IDs in the list above'),
+            event: text('Event ID', `Which event the photo is from: one of the IDs in the list above (${galleryEventIds}).`),
             alt: long('Description', 'One plain sentence about what is in the photo. It is read out to people who cannot see it and shown when the photo is opened.'),
           }),
           { label: 'Photos', itemLabel: (props) => props.fields.alt.value || 'Photo' },

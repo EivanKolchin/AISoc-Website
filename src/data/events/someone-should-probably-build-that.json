@@ -1,0 +1,20 @@
+{
+  "title": "Someone Should Probably Build That",
+  "start": "2026-11-17",
+  "end": "",
+  "location": "",
+  "locationShort": "",
+  "short": "Build That",
+  "level": "",
+  "with": [
+    "OpenAI Student Collective"
+  ],
+  "note": "No coding experience needed.",
+  "blurb": "90 people came to build with the OpenAI Student Collective.",
+  "page": "#",
+  "after": {
+    "stat": "90 came",
+    "recap": "#",
+    "recapLabel": "Recap"
+  }
+}

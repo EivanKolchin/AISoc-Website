@@ -3,14 +3,17 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Socials from '../components/Socials.astro';
 import site from '../data/site.json';
-import eventsData from '../data/events.json';
+import home from '../data/home.json';
+import { allEvents } from '../lib/event-data';
 import '../styles/nextbar.css';
 import '../styles/home.css';
-import { type EventItem, eventList, upcoming } from '../lib/events';
+import { hasLink, upcoming } from '../lib/events';
 import { renderDateList, renderNextEvent } from '../lib/calendar';
 import { sitePhoto } from '../lib/photos';
 
-const events = eventList(eventsData.events);
+const events = allEvents;
+// The dashboard leaves out empty fields, so any of these may be missing.
+const news = home.notice as { text?: string; url?: string } | undefined;
 const now = new Date();
 const slot = site.workshopSlot;
 const slotLine = `Workshops run every ${slot.day} at ${slot.start} in ${slot.room}.`;
@@ -25,7 +28,7 @@ const glow =
     <Image class="hero-photo" src={sitePhoto('hero-members.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-copy">
-      <h1 id="hero-h">{site.statement}</h1>
+      <h1 id="hero-h">{home.statement}</h1>
       <Socials tone="glass" />
     </div>
     <div class="hero-next">
@@ -62,12 +65,16 @@ const glow =
     </div>
   </section>
 
-  <div class="home-dark">
-    <section class="news" aria-labelledby="news-h">
-      <h2 class="h-line" id="news-h">News</h2>
-      <a class="news-box" href={site.notice.url}>{site.notice.text}</a>
-    </section>
-  </div>
+  {
+    news?.text && (
+      <div class="home-dark">
+        <section class="news" aria-labelledby="news-h">
+          <h2 class="h-line" id="news-h">News</h2>
+          {hasLink(news.url) ? <a class="news-box" href={news.url}>{news.text}</a> : <p class="news-box">{news.text}</p>}
+        </section>
+      </div>
+    )
+  }
 
   <div class="home-light">
     <section class="upcoming" aria-labelledby="upcoming-h">
@@ -95,11 +102,11 @@ const glow =
         </div>
         <section class="about-panel" aria-labelledby="about-h">
           <h2 id="about-h">Who we are</h2>
-          <p>{site.about.who}</p>
+          <p>{home.about.who}</p>
           <h3>What we do</h3>
-          <p>{site.about.what}</p>
+          <p>{home.about.what}</p>
           <h3>What we aim for</h3>
-          <p>{site.about.aim}</p>
+          <p>{home.about.aim}</p>
           <p class="about-links"><a href="/committee">Meet the committee</a><a href="/events#workshops">Come to a workshop</a></p>
         </section>
       </div>

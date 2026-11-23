@@ -249,11 +249,29 @@ gradient centred on that blue. The font is Inter, the one the ECS society site u
 Workshops have no page of their own: they are a section of the Events page, and the
 old `/workshops` address redirects there (set in `astro.config.mjs`).
 
+### Search engines
+
+- `/sitemap-index.xml` lists every page. It is made at build time by `@astrojs/sitemap`,
+  so new pages are added by themselves. The dashboard is left out.
+- `/robots.txt` (`src/pages/robots.txt.ts`) lets every crawler in, keeps them out of
+  `/keystatic`, and points them at the sitemap.
+- `/.well-known/security.txt` tells people where to report a security problem
+  (the society email). Its expiry date renews on every deploy.
+- `src/lib/seo.ts` writes structured data (JSON-LD) into the pages: the society, its
+  other names (AISoc and so on) and its social profiles on the home page, and every
+  event with a place on the Events page, so Google can list them.
+- Every page has a canonical address and a link preview (title, description and a
+  1200 x 630 photo) for when it is shared.
+
+The public address comes from Vercel (`VERCEL_PROJECT_PRODUCTION_URL`), so adding a
+custom domain in Vercel updates all of the above on the next deploy. To get into
+Google quickly, add the site in [Google Search Console](https://search.google.com/search-console)
+and submit `sitemap-index.xml` there.
+
 ## Still to fill in
 
 These are marked `"#"` or empty in the data files, so the site currently hides them:
 
-- `site.json`: the WhatsApp community link.
 - `events/`: the event page link (`page`) for every event except SotonShip 26, and
   the recap link (`recap`) for "Can AI save the planet?" and "Someone Should Probably
   Build That". The time and place of "Someone Should Probably Build That" are also
@@ -267,8 +285,9 @@ These are filled in but should be checked by someone who knows:
   before 2024 to 2025 (currently blank).
 - `projects.json`: the SotonShip gallery address and photo count, and whether the two
   Bunfight demos have a live address to link to instead of the code.
-- `site.json`: the Discord and Instagram counts (`stats`). Update `asOf` whenever the
-  numbers are refreshed.
+- `site.json`: the Discord, Instagram and Facebook counts (`stats`), shown when you hover
+  over the footer badges. Update `asOf` whenever the numbers are refreshed. The WhatsApp
+  group size (`whatsappMembers`) is empty, so its badge shows no number yet.
 
 Assets we do not have yet:
 

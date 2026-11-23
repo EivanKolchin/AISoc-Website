@@ -1,24 +1,28 @@
 ---
-// The society's community links as see-through glyph badges. Links left empty or set to
-// "#" in site.json are left out.
+// The society's community links as see-through glyph badges, shown in the footer.
+// Links left empty or set to "#" in site.json are left out.
 import site from '../data/site.json';
 import { SOCIAL_ICONS } from '../lib/icons';
 import { hasLink } from '../lib/events';
 
-interface Props {
-  /** "glass" blurs whatever is behind it (use over a photo). */
-  tone?: 'plain' | 'glass';
-  /** Only the links ticked "Show at the top of the home page" in the dashboard. */
-  heroOnly?: boolean;
-  class?: string;
-}
+// The numbers from Society details, shown when you hover over a badge ("Instagram, 1,602 followers").
+const COUNTS: Record<string, [field: string, noun: string]> = {
+  discord: ['discordMembers', 'members'],
+  instagram: ['instagramFollowers', 'followers'],
+  facebook: ['facebookFollowers', 'followers'],
+  whatsapp: ['whatsappMembers', 'members'],
+};
+const stats = site.stats as unknown as Record<string, number | null | undefined>;
 
-const { tone = 'plain', heroOnly = false, class: className } = Astro.props;
-const links = site.social.filter((item) => hasLink(item.url) && SOCIAL_ICONS[item.id] && (!heroOnly || item.hero));
-const label = (id: string, name: string) => (id === 'discord' ? `${name}, ${site.stats.discordMembers} members` : name);
+const links = site.social.filter((item) => hasLink(item.url) && SOCIAL_ICONS[item.id]);
+const label = (id: string, name: string) => {
+  const [field, noun] = COUNTS[id] ?? [];
+  const count = field ? stats[field] : null;
+  return typeof count === 'number' && count > 0 ? `${name}, ${count.toLocaleString('en-GB')} ${noun}` : name;
+};
 ---
 
-<ul class:list={['socials', `socials--${tone}`, className]}>
+<ul class="socials">
   {
     links.map((item) => (
       <li>

@@ -20,44 +20,40 @@
   "stats": {
     "asOf": "2026-11-23",
     "discordMembers": 690,
-    "instagramFollowers": 1602
+    "instagramFollowers": 1602,
+    "facebookFollowers": 698,
+    "whatsappMembers": null
   },
   "social": [
     {
       "id": "discord",
       "label": "Discord",
-      "url": "https://discord.gg/6ueny233XV",
-      "hero": true
+      "url": "https://discord.gg/6ueny233XV"
     },
     {
       "id": "instagram",
       "label": "Instagram",
-      "url": "https://www.instagram.com/sotonaisoc/",
-      "hero": true
+      "url": "https://www.instagram.com/sotonaisoc/"
     },
     {
       "id": "facebook",
       "label": "Facebook",
-      "url": "https://www.facebook.com/sotonaisoc",
-      "hero": true
+      "url": "https://www.facebook.com/sotonaisoc"
     },
     {
       "id": "whatsapp",
-      "label": "WhatsApp group sign-up",
-      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=-XhTSvQpPk2-iWadA62p2FTvBOtgb7RLnNtZv6_YvHlUMlhKUU9KMDY1TU0wQUI5NERKR1czWU9ORC4u&route=shorturl",
-      "hero": true
+      "label": "WhatsApp group",
+      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=-XhTSvQpPk2-iWadA62p2FTvBOtgb7RLnNtZv6_YvHlUMlhKUU9KMDY1TU0wQUI5NERKR1czWU9ORC4u&route=shorturl"
     },
     {
       "id": "linkedin",
       "label": "LinkedIn",
-      "url": "https://www.linkedin.com/company/aisoc",
-      "hero": false
+      "url": "https://www.linkedin.com/company/aisoc"
     },
     {
       "id": "github",
       "label": "GitHub",
-      "url": "https://github.com/aisoc",
-      "hero": false
+      "url": "https://github.com/aisoc"
     }
   ]
 }

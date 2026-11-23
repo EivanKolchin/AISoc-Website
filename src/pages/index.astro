@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Socials from '../components/Socials.astro';
 import site from '../data/site.json';
 import home from '../data/home.json';
 import { allEvents } from '../lib/event-data';
@@ -30,7 +29,6 @@ const glow =
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-copy">
       <h1 id="hero-h">{home.statement}</h1>
-      <Socials tone="glass" heroOnly />
     </div>
     <div class="hero-next">
       <div class="next-wrap">

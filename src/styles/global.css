@@ -91,12 +91,21 @@
   box-sizing: border-box;
 }
 
+/* No rubber-band bounce, pull-to-refresh or sideways drift at the edges of the page, and no
+   sideways scrolling at all. Pop-ups that scroll keep their scrolling to themselves. */
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  overflow-x: clip;
+  overscroll-behavior: none;
+}
+
+dialog {
+  overscroll-behavior: none;
 }
 
 body {
+  overscroll-behavior: none;
   margin: 0;
   background: var(--bg);
   color: var(--fg);
@@ -315,11 +324,6 @@ svg {
 
 .sb:hover {
   background: rgba(255, 255, 255, 0.18);
-}
-
-.socials--glass .sb {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
 }
 
 .rnd {

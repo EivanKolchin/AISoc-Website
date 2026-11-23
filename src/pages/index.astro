@@ -10,6 +10,7 @@ import '../styles/home.css';
 import { hasLink, upcoming } from '../lib/events';
 import { renderDateList, renderNextEvent } from '../lib/calendar';
 import { sitePhoto } from '../lib/photos';
+import { societyData, websiteData } from '../lib/seo';
 
 const events = allEvents;
 // The dashboard leaves out empty fields, so any of these may be missing.
@@ -23,13 +24,13 @@ const glow =
   'radial-gradient(46% 56% at 78% 24%, rgba(31,111,209,.95), transparent 72%), radial-gradient(40% 50% at 24% 34%, rgba(30,64,175,.9), transparent 72%), radial-gradient(36% 42% at 62% 86%, rgba(255,150,104,.85), transparent 72%)';
 ---
 
-<Base home>
+<Base home schema={[websiteData(Astro.site), societyData(Astro.site)]}>
   <section class="hero" aria-labelledby="hero-h">
     <Image class="hero-photo" src={sitePhoto('hero-members.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-copy">
       <h1 id="hero-h">{home.statement}</h1>
-      <Socials tone="glass" />
+      <Socials tone="glass" heroOnly />
     </div>
     <div class="hero-next">
       <div class="next-wrap">

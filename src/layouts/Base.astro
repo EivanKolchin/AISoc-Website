@@ -1,8 +1,11 @@
 ---
+import { getImage } from 'astro:assets';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import site from '../data/site.json';
+import { sitePhoto } from '../lib/photos';
+import { jsonLd } from '../lib/seo';
 
 interface Props {
   /** Page name for the browser tab. Leave out on the home page. */
@@ -12,10 +15,18 @@ interface Props {
   home?: boolean;
   /** Inner page that opens with a photo hero (.page-hero): the header sits over it. */
   hero?: boolean;
+  /** Structured data for search engines (see src/lib/seo.ts). */
+  schema?: Record<string, unknown>[];
 }
 
-const { title, description = site.tagline, home = false, hero = false } = Astro.props;
+const { title, description = site.tagline, home = false, hero = false, schema = [] } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name}, ${site.university}`;
+
+// The one address search engines should use for this page (no trailing slash, like the links).
+const canonical = new URL(Astro.url.pathname.replace(/(?<=.)\/$/, ''), Astro.site).href;
+// The picture shown when a page is shared on WhatsApp, Discord, LinkedIn and the like.
+const preview = await getImage({ src: sitePhoto('hero-members.jpg'), width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const previewUrl = new URL(preview.src, Astro.site).href;
 ---
 
 <!doctype html>
@@ -25,9 +36,23 @@ const fullTitle = title ? `${title} | ${site.name}` : `${site.name}, ${site.univ
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={previewUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`Members of the ${site.name}`} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#0b0e12" />
     <link rel="icon" type="image/png" href="/logo-mark.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="text/calendar" title={`${site.name} events`} href="/calendar.ics" />
+    {schema.length > 0 && <script type="application/ld+json" set:html={jsonLd(schema)} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />

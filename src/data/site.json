@@ -36,9 +36,15 @@
       "hero": true
     },
     {
+      "id": "facebook",
+      "label": "Facebook",
+      "url": "https://www.facebook.com/sotonaisoc",
+      "hero": true
+    },
+    {
       "id": "whatsapp",
-      "label": "WhatsApp",
-      "url": "#",
+      "label": "WhatsApp group sign-up",
+      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=-XhTSvQpPk2-iWadA62p2FTvBOtgb7RLnNtZv6_YvHlUMlhKUU9KMDY1TU0wQUI5NERKR1czWU9ORC4u&route=shorturl",
       "hero": true
     },
     {

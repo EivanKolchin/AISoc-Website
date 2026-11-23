@@ -10,8 +10,10 @@ import { allEvents } from '../lib/event-data';
 import workshops from '../data/workshops.json';
 import { type EventItem, capitalise, numberWord, past, upcoming } from '../lib/events';
 import { renderEventList, renderNextEvent } from '../lib/calendar';
+import { eventData } from '../lib/seo';
 
 const events = allEvents;
+const schema = events.map((ev) => eventData(ev, Astro.site)).filter((item) => item !== null);
 const now = new Date();
 const comingUp = upcoming(events, now);
 const earlier = past(events, now);
@@ -20,7 +22,7 @@ const yearCount = workshops.years.length;
 const slotLine = `Workshops run every ${slot.day} at ${slot.start} in ${slot.room}.`;
 ---
 
-<Base hero title="Events" description={`Talks, workshops and hackathons from ${site.name}. Workshops run every ${slot.day} at ${slot.start}.`}>
+<Base hero title="Events" schema={schema} description={`Talks, workshops and hackathons from ${site.name}. Workshops run every ${slot.day} at ${slot.start}.`}>
   <section class="page-hero on-dark" aria-labelledby="events-h">
     <Image class="page-hero-photo" src={sitePhoto('hero-events.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="page-hero-shade" aria-hidden="true"></div>

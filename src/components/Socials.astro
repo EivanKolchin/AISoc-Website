@@ -1,6 +1,6 @@
 ---
-// The society's community links as see-through glyph badges. Links still set to "#"
-// in site.json (WhatsApp, until the committee adds it) are left out.
+// The society's community links as see-through glyph badges. Links left empty or set to
+// "#" in site.json are left out.
 import site from '../data/site.json';
 import { SOCIAL_ICONS } from '../lib/icons';
 import { hasLink } from '../lib/events';
@@ -8,11 +8,13 @@ import { hasLink } from '../lib/events';
 interface Props {
   /** "glass" blurs whatever is behind it (use over a photo). */
   tone?: 'plain' | 'glass';
+  /** Only the links ticked "Show at the top of the home page" in the dashboard. */
+  heroOnly?: boolean;
   class?: string;
 }
 
-const { tone = 'plain', class: className } = Astro.props;
-const links = site.social.filter((item) => hasLink(item.url) && SOCIAL_ICONS[item.id]);
+const { tone = 'plain', heroOnly = false, class: className } = Astro.props;
+const links = site.social.filter((item) => hasLink(item.url) && SOCIAL_ICONS[item.id] && (!heroOnly || item.hero));
 const label = (id: string, name: string) => (id === 'discord' ? `${name}, ${site.stats.discordMembers} members` : name);
 ---
 

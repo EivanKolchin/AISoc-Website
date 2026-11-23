@@ -141,6 +141,7 @@ export default config({
               options: [
                 { label: 'Discord', value: 'discord' },
                 { label: 'Instagram', value: 'instagram' },
+                { label: 'Facebook', value: 'facebook' },
                 { label: 'WhatsApp', value: 'whatsapp' },
                 { label: 'LinkedIn', value: 'linkedin' },
                 { label: 'GitHub', value: 'github' },

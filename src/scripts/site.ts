@@ -97,17 +97,20 @@ function initCalendar(root: HTMLElement): void {
   gridEl.addEventListener('click', (event) => {
     const chip = (event.target as Element).closest<HTMLElement>('[data-ev]');
     if (!chip) return;
+    // Where the card is now (its open preview if there is one), before anything changes.
+    const peek = chip.querySelector<HTMLElement>('.mc-peek');
+    const source = peek && getComputedStyle(peek).visibility === 'visible' ? peek : chip;
+    const from = source.getBoundingClientRect();
+    const fromBg = getComputedStyle(source).backgroundColor;
+    const fromFg = getComputedStyle(source).color;
+    const title = chip.querySelector('.pk-title')?.textContent ?? chip.textContent ?? '';
+
     selectedId = chip.dataset.ev ?? null;
     gridEl.querySelectorAll<HTMLElement>('[data-ev]').forEach((other) => {
       other.setAttribute('aria-pressed', String(other.dataset.ev === selectedId));
     });
     drawDetail();
-    // The preview finishes its move to the right and the details panel grows in.
-    chip.classList.add('launch');
-    window.setTimeout(() => chip.classList.remove('launch'), 450);
-    detailEl.classList.remove('detail-enter');
-    void detailEl.offsetWidth;
-    detailEl.classList.add('detail-enter');
+    flyToDetail(from, fromBg, fromFg, title, detailEl.firstElementChild as HTMLElement | null);
     // On a phone the details sit below the grid: bring them into view.
     const box = detailEl.getBoundingClientRect();
     if (box.top > window.innerHeight - 120 || box.bottom < 0) detailEl.scrollIntoView({ block: 'nearest' });
@@ -116,6 +119,45 @@ function initCalendar(root: HTMLElement): void {
   drawGrid();
   drawDetail();
   if (afterEl) afterEl.textContent = afterWeekLine(events, today);
+}
+
+// The chosen event's card travels from the calendar to the details panel, growing and
+// softening on the way, then hands over to the real panel.
+function flyToDetail(from: DOMRect, fromBg: string, fromFg: string, title: string, target: HTMLElement | null): void {
+  if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const to = target.getBoundingClientRect();
+  const onScreen = to.top < window.innerHeight && to.bottom > 0 && from.width > 0;
+  if (!onScreen) return;
+
+  const ghost = document.createElement('div');
+  ghost.className = 'cal-ghost';
+  ghost.setAttribute('aria-hidden', 'true');
+  const label = document.createElement('span');
+  label.textContent = title;
+  ghost.append(label);
+  document.body.append(ghost);
+
+  const box = (r: DOMRect) => ({ left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+  const timing = { duration: 780, easing: 'cubic-bezier(0.22, 0.9, 0.25, 1)', fill: 'forwards' as FillMode };
+  target.style.opacity = '0';
+  const flight = ghost.animate(
+    [
+      { ...box(from), borderRadius: '14px', backgroundColor: fromBg, color: fromFg },
+      { offset: 0.55, borderRadius: '18px', backgroundColor: '#12233b', color: '#ffffff' },
+      { ...box(to), borderRadius: '16px', backgroundColor: '#0f141a', color: '#ffffff' },
+    ],
+    timing,
+  );
+  label.animate([{ fontSize: '15px', opacity: 1 }, { fontSize: '24px', opacity: 1, offset: 0.6 }, { fontSize: '26px', opacity: 0 }], timing);
+
+  flight.onfinish = () => {
+    target.style.transition = 'opacity 0.3s ease-out';
+    target.style.opacity = '1';
+    ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'ease-out', fill: 'forwards' }).onfinish = () => {
+      ghost.remove();
+      target.style.removeProperty('transition');
+    };
+  };
 }
 
 function initNextEvent(): void {

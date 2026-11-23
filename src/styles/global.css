@@ -862,20 +862,25 @@ a.card:hover {
   margin-top: auto;
 }
 
-/* Events sit in each day as small square cards with just their name. Hovering slides
-   the card right and opens a short preview; clicking finishes the move into the
-   details panel on the right. */
+/* Events sit in each day as small square cards with just their name. On hover the
+   card itself grows out to the side into a short preview; on click it travels into the
+   details panel (see the calendar code in src/scripts/site.ts). */
 .evc,
 .mchip {
+  --chip-bg: #0f141a;
+  --chip-fg: #fff;
+  --chip-sub: #b9c2ce;
+  --chip-hint: #9cc2f5;
+  --chip-ring: transparent;
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   border: 0;
   border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 0 0 1px var(--line), 0 10px 22px -16px rgba(15, 20, 26, 0.45);
-  color: var(--ink);
+  background: var(--chip-bg);
+  box-shadow: inset 0 0 0 1px var(--chip-ring), 0 10px 22px -16px rgba(15, 20, 26, 0.6);
+  color: var(--chip-fg);
   font-family: inherit;
   text-align: left;
   cursor: pointer;
@@ -891,20 +896,8 @@ a.card:hover {
   justify-content: center;
   aspect-ratio: 1;
   max-height: 112px;
-  padding: 14px 10px 10px;
+  padding: 10px;
   text-align: center;
-}
-
-/* a short gradient line along the top edge */
-.mchip::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 18%;
-  right: 18%;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--grad);
 }
 
 .mc-title {
@@ -920,56 +913,71 @@ a.card:hover {
   text-wrap: balance;
 }
 
+/* Past events: a quiet white card */
 .evc.past,
 .mchip.past {
-  background: var(--surface3);
-  box-shadow: none;
-  color: var(--muted);
+  --chip-bg: #fff;
+  --chip-fg: var(--soft);
+  --chip-sub: var(--muted);
+  --chip-hint: var(--accent);
+  --chip-ring: var(--line-strong);
+  box-shadow: inset 0 0 0 1px var(--chip-ring);
 }
 
-.mchip.past::before {
-  background: var(--line-hover);
-}
-
+/* The chosen event fills with the accent blue */
 .evc[aria-pressed='true'],
 .mchip[aria-pressed='true'] {
-  background: var(--accent);
-  box-shadow: 0 12px 24px -14px rgba(15, 20, 26, 0.55);
-  color: #fff;
+  --chip-bg: var(--accent);
+  --chip-fg: #fff;
+  --chip-sub: rgba(255, 255, 255, 0.82);
+  --chip-hint: #fff;
+  --chip-ring: transparent;
 }
 
-.mchip[aria-pressed='true']::before {
-  background: rgba(255, 255, 255, 0.7);
+.mchip:hover,
+.mchip:focus-visible {
+  z-index: 5;
 }
 
-/* The preview that slides out to the right (to the left on weekends, near the edge) */
+.mcell:has(.mchip:hover),
+.mcell:has(.mchip:focus-visible) {
+  z-index: 6;
+}
+
+/* The preview starts exactly over the card, in the card's own colours, and grows out
+   to the right (to the left on weekends, near the calendar's edge). */
 .mc-peek {
   position: absolute;
   z-index: 20;
   top: 50%;
-  left: calc(100% + 10px);
+  left: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 4px;
-  width: 232px;
-  padding: 14px 16px;
+  width: 100%;
+  height: 100%;
+  padding: 16px 18px;
+  overflow: hidden;
   border-radius: 14px;
-  background: #0f141a;
-  box-shadow: 0 22px 44px -18px rgba(15, 20, 26, 0.6);
-  color: #fff;
+  background: var(--chip-bg);
+  box-shadow: inset 0 0 0 1px var(--chip-ring), 0 26px 50px -22px rgba(15, 20, 26, 0.6);
+  color: var(--chip-fg);
   text-align: left;
   opacity: 0;
-  pointer-events: none;
-  transform: translate(-12px, -50%) scale(0.92);
-  transform-origin: left center;
   visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .mchip.flip .mc-peek {
   left: auto;
-  right: calc(100% + 10px);
-  transform: translate(12px, -50%) scale(0.92);
-  transform-origin: right center;
+  right: 0;
+}
+
+.mc-peek > span {
+  opacity: 0;
+  white-space: normal;
 }
 
 .pk-title {
@@ -983,107 +991,82 @@ a.card:hover {
 .pk-place {
   font-size: 13px;
   line-height: 1.4;
-  color: #b9c0ca;
+  color: var(--chip-sub);
 }
 
 .pk-hint {
   margin-top: 6px;
   font-size: 12.5px;
   font-weight: 600;
-  color: #8fb6ec;
-}
-
-.mchip:hover,
-.mchip:focus-visible {
-  z-index: 5;
-  transform: translateX(4px) scale(1.04);
-}
-
-.mchip.flip:hover,
-.mchip.flip:focus-visible {
-  transform: translateX(-4px) scale(1.04);
+  color: var(--chip-hint);
 }
 
 .mchip:hover .mc-peek,
 .mchip:focus-visible .mc-peek {
+  width: 262px;
+  height: 148px;
   opacity: 1;
   visibility: visible;
-  transform: translate(0, -50%) scale(1);
 }
 
-.mcell:has(.mchip:hover),
-.mcell:has(.mchip:focus-visible) {
-  z-index: 6;
-}
-
-/* On click the preview finishes its move to the right, and the details panel grows in. */
-.mchip.launch .mc-peek {
-  visibility: visible;
-  animation: peek-launch 0.42s ease-in forwards;
-}
-
-.mchip.flip.launch .mc-peek {
-  animation-name: peek-launch-flip;
-}
-
-@keyframes peek-launch {
-  from {
-    opacity: 1;
-    transform: translate(0, -50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(120px, -50%) scale(1.15);
-  }
-}
-
-@keyframes peek-launch-flip {
-  from {
-    opacity: 1;
-    transform: translate(0, -50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(60px, -50%) scale(1.1);
-  }
-}
-
-[data-cal-detail].detail-enter > * {
-  animation: detail-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: left center;
-}
-
-@keyframes detail-in {
-  from {
-    opacity: 0;
-    transform: translateX(-36px) scale(0.96);
-  }
+.mchip:hover .mc-peek > span,
+.mchip:focus-visible .mc-peek > span {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .mchip,
+  .mchip {
+    transition: transform 0.45s cubic-bezier(0.22, 0.9, 0.25, 1), background-color 0.3s ease-out;
+  }
+
+  /* Growing: show at once, then widen and heighten slowly. Shrinking: reverse, then hide. */
   .mc-peek {
     transition:
-      transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
-      opacity 0.18s ease-out,
-      visibility 0.18s,
-      box-shadow 0.2s ease-out,
-      background-color 0.2s ease-out;
+      width 0.5s cubic-bezier(0.22, 0.9, 0.25, 1),
+      height 0.5s cubic-bezier(0.22, 0.9, 0.25, 1),
+      opacity 0s linear 0.5s,
+      visibility 0s linear 0.5s;
+  }
+
+  .mchip:hover .mc-peek,
+  .mchip:focus-visible .mc-peek {
+    transition:
+      width 0.5s cubic-bezier(0.22, 0.9, 0.25, 1),
+      height 0.5s cubic-bezier(0.22, 0.9, 0.25, 1),
+      opacity 0s,
+      visibility 0s;
+  }
+
+  .mc-peek > span {
+    transition: opacity 0.15s ease-out;
+  }
+
+  .mchip:hover .mc-peek > span,
+  .mchip:focus-visible .mc-peek > span {
+    transition: opacity 0.3s ease-out 0.22s;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mchip:hover,
-  .mchip:focus-visible,
-  .mchip.flip:hover,
-  .mchip.flip:focus-visible {
-    transform: none;
-  }
+/* The card on its way to the details panel */
+.cal-ghost {
+  position: fixed;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #0f141a;
+  box-shadow: 0 30px 60px -24px rgba(15, 20, 26, 0.6);
+  color: #fff;
+  pointer-events: none;
+}
 
-  .mchip.launch .mc-peek,
-  [data-cal-detail].detail-enter > * {
-    animation: none;
-  }
+.cal-ghost span {
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.25;
 }
 
 .cal-month {

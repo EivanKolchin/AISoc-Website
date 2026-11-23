@@ -27,21 +27,27 @@ with no sign-in.
 
 ### Setting up the login (once, after the first deploy)
 
-The dashboard signs people in through a GitHub App that belongs to the repository.
-It only has to be created once:
+The dashboard signs people in through a GitHub App. It only has to be created once,
+and Keystatic only allows that from a laptop, not from the live site:
 
-1. Deploy the site on Vercel (see [Publishing](#publishing)).
-2. Open `https://<the live address>/keystatic` and choose **Create GitHub App**. Give
-   it a name such as "AISoc website dashboard" and install it on the
+1. On your laptop, run `npm run dashboard:setup` and open
+   http://127.0.0.1:4321/keystatic/setup.
+2. In **Deployed App URL**, enter the live address (for example
+   `https://ai-soc-website-orpin.vercel.app`, or the society's own domain once it has
+   one). Choose **Create GitHub App**, confirm on GitHub, then install the app on the
    `AISoc-Website` repository only.
-3. GitHub hands back four values. Keystatic writes them to a local `.env` file when
-   you do this on your laptop; on Vercel, add them under Project Settings,
-   Environment Variables:
+3. GitHub sends you back to the laptop, and Keystatic writes four values to `.env`.
+   Add the same four to the Vercel project (Settings, Environment Variables,
+   Production):
    - `KEYSTATIC_GITHUB_CLIENT_ID`
    - `KEYSTATIC_GITHUB_CLIENT_SECRET`
    - `KEYSTATIC_SECRET`
    - `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`
 4. Redeploy. **Committee login** now asks for GitHub and saves to the repository.
+
+If the site moves to a new address, add
+`https://<new address>/api/keystatic/github/oauth/callback` to the app's callback URLs
+on GitHub (Settings, Developer settings, GitHub Apps).
 
 Never commit the `.env` file: it holds the app's secret. It is already ignored by git.
 

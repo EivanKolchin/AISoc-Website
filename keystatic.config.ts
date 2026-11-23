@@ -1,7 +1,11 @@
 // The committee dashboard at /keystatic. Each section edits one file in src/data.
 // On your own computer (npm run dev) it saves straight to the files. On the live site it
 // signs you in with GitHub and saves to the repository, which rebuilds the site.
+// `npm run dashboard:setup` runs the GitHub version locally, which is needed once to
+// create the GitHub App the login uses (see README).
 import { config, fields, singleton } from '@keystatic/core';
+
+const useGitHub = import.meta.env.PROD || import.meta.env.MODE === 'github';
 
 const text = (label: string, description?: string) => fields.text({ label, description });
 const long = (label: string, description?: string) => fields.text({ label, description, multiline: true });
@@ -9,7 +13,7 @@ const link = (label: string, description = 'A full web address, a page on this s
   fields.text({ label, description });
 
 export default config({
-  storage: import.meta.env.PROD ? { kind: 'github', repo: 'EivanKolchin/AISoc-Website' } : { kind: 'local' },
+  storage: useGitHub ? { kind: 'github', repo: 'EivanKolchin/AISoc-Website' } : { kind: 'local' },
   ui: {
     brand: { name: 'AI Society dashboard' },
     navigation: {

@@ -3,7 +3,7 @@
 // Pages are already complete without this script; it only brings them up to date.
 
 import eventsData from '../data/events.json';
-import { type EventItem, addDays, past, startOfDay, upcoming } from '../lib/events';
+import { type EventItem, eventList, addDays, past, startOfDay, upcoming } from '../lib/events';
 import {
   type CalView,
   afterWeekLine,
@@ -15,7 +15,7 @@ import {
   renderNextEvent,
 } from '../lib/calendar';
 
-const events = eventsData as EventItem[];
+const events = eventList(eventsData.events);
 const now = new Date();
 const today = startOfDay(now);
 const nextEvent = upcoming(events, now)[0] ?? null;
@@ -110,10 +110,11 @@ function initCalendar(root: HTMLElement): void {
       other.setAttribute('aria-pressed', String(other.dataset.ev === selectedId));
     });
     drawDetail();
-    flyToDetail(from, fromBg, fromFg, title, detailEl.firstElementChild as HTMLElement | null);
-    // On a phone the details sit below the grid: bring them into view.
-    const box = detailEl.getBoundingClientRect();
-    if (box.top > window.innerHeight - 120 || box.bottom < 0) detailEl.scrollIntoView({ block: 'nearest' });
+    // On a phone the details sit below the grid. The page glides down to them while the
+    // card flies, on the same curve, so the card lands exactly where the panel ends up.
+    const shift = scrollNeeded(detailEl);
+    flyToDetail(from, fromBg, fromFg, title, detailEl.firstElementChild as HTMLElement | null, shift);
+    glideBy(shift, FLIGHT_MS);
   });
 
   drawGrid();
@@ -121,11 +122,44 @@ function initCalendar(root: HTMLElement): void {
   if (afterEl) afterEl.textContent = afterWeekLine(events, today);
 }
 
+const FLIGHT_MS = 780;
+const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// How far the page has to move so the details panel is in view. Positive is down.
+function scrollNeeded(el: HTMLElement): number {
+  const box = el.getBoundingClientRect();
+  const room = window.innerHeight;
+  let delta = 0;
+  if (box.bottom > room - 16) delta = Math.min(box.bottom - room + 16, box.top - 16);
+  else if (box.top < 16) delta = box.top - 16;
+  const furthest = document.documentElement.scrollHeight - room - window.scrollY;
+  return Math.round(Math.max(-window.scrollY, Math.min(delta, furthest)));
+}
+
+// Scroll by a set amount over a set time, easing out like the card's flight.
+function glideBy(delta: number, duration: number): void {
+  if (!delta) return;
+  const startY = window.scrollY;
+  if (reduceMotion()) {
+    window.scrollTo({ top: startY + delta, behavior: 'instant' });
+    return;
+  }
+  const t0 = performance.now();
+  const step = (now: number) => {
+    const t = Math.min(1, (now - t0) / duration);
+    window.scrollTo({ top: startY + delta * (1 - Math.pow(1 - t, 3)), behavior: 'instant' });
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 // The chosen event's card travels from the calendar to the details panel, growing and
-// softening on the way, then hands over to the real panel.
-function flyToDetail(from: DOMRect, fromBg: string, fromFg: string, title: string, target: HTMLElement | null): void {
-  if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const to = target.getBoundingClientRect();
+// softening on the way, then hands over to the real panel. `shift` is how far the page
+// is about to scroll, so the card aims for where the panel will be, not where it is now.
+function flyToDetail(from: DOMRect, fromBg: string, fromFg: string, title: string, target: HTMLElement | null, shift = 0): void {
+  if (!target || reduceMotion()) return;
+  const now = target.getBoundingClientRect();
+  const to = new DOMRect(now.left, now.top - shift, now.width, now.height);
   const onScreen = to.top < window.innerHeight && to.bottom > 0 && from.width > 0;
   if (!onScreen) return;
 
@@ -138,17 +172,26 @@ function flyToDetail(from: DOMRect, fromBg: string, fromFg: string, title: strin
   document.body.append(ghost);
 
   const box = (r: DOMRect) => ({ left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
-  const timing = { duration: 780, easing: 'cubic-bezier(0.22, 0.9, 0.25, 1)', fill: 'forwards' as FillMode };
+  const timing = { duration: FLIGHT_MS, easing: 'cubic-bezier(0.22, 0.9, 0.25, 1)', fill: 'forwards' as FillMode };
+  // A phone's day square is too small for the name, so the name fades in on the way.
+  const small = from.width < 90;
   target.style.opacity = '0';
   const flight = ghost.animate(
     [
-      { ...box(from), borderRadius: '14px', backgroundColor: fromBg, color: fromFg },
+      { ...box(from), borderRadius: small ? '10px' : '14px', backgroundColor: fromBg, color: fromFg },
       { offset: 0.55, borderRadius: '18px', backgroundColor: '#12233b', color: '#ffffff' },
       { ...box(to), borderRadius: '16px', backgroundColor: '#0f141a', color: '#ffffff' },
     ],
     timing,
   );
-  label.animate([{ fontSize: '15px', opacity: 1 }, { fontSize: '24px', opacity: 1, offset: 0.6 }, { fontSize: '26px', opacity: 0 }], timing);
+  label.animate(
+    [
+      { fontSize: small ? '18px' : '15px', opacity: small ? 0 : 1 },
+      { fontSize: '24px', opacity: 1, offset: 0.6 },
+      { fontSize: '26px', opacity: 0 },
+    ],
+    timing,
+  );
 
   flight.onfinish = () => {
     target.style.transition = 'opacity 0.3s ease-out';
@@ -207,6 +250,24 @@ function initDialogs(): void {
   });
 }
 
+// "Copy" buttons put their text on the clipboard and say so for a moment.
+function initCopy(): void {
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((button) => {
+    const label = button.textContent?.trim() ?? 'Copy';
+    let timer = 0;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+        button.textContent = 'Copied';
+      } catch {
+        button.textContent = 'Could not copy';
+      }
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => (button.textContent = label), 2000);
+    });
+  });
+}
+
 // On the live site, "Subscribe" opens the feed in the visitor's calendar app,
 // which keeps itself up to date. Locally it stays a plain download.
 function initSubscribe(): void {
@@ -223,4 +284,5 @@ initEventLists();
 initDateLists();
 initViewSwitch();
 initDialogs();
+initCopy();
 initSubscribe();

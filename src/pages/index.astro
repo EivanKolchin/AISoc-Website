@@ -6,11 +6,11 @@ import site from '../data/site.json';
 import eventsData from '../data/events.json';
 import '../styles/nextbar.css';
 import '../styles/home.css';
-import { type EventItem, upcoming } from '../lib/events';
+import { type EventItem, eventList, upcoming } from '../lib/events';
 import { renderDateList, renderNextEvent } from '../lib/calendar';
-import { photo } from '../lib/photos';
+import { sitePhoto } from '../lib/photos';
 
-const events = eventsData as EventItem[];
+const events = eventList(eventsData.events);
 const now = new Date();
 const slot = site.workshopSlot;
 const slotLine = `Workshops run every ${slot.day} at ${slot.start} in ${slot.room}.`;
@@ -22,7 +22,7 @@ const glow =
 
 <Base home>
   <section class="hero" aria-labelledby="hero-h">
-    <Image class="hero-photo" src={photo('bt24-group-photo.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image class="hero-photo" src={sitePhoto('hero-members.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-copy">
       <h1 id="hero-h">{site.statement}</h1>
@@ -84,13 +84,13 @@ const glow =
       <div class="about">
         <div class="about-photo">
           <div class="ap ap-a">
-            <Image src={photo('group-photo.jpg')} alt="A big group photo of members in a computer lab" widths={[480, 760, 1040]} sizes="(max-width: 980px) 90vw, 460px" />
+            <Image src={sitePhoto('about-group.jpg')} alt="A big group photo of members in a computer lab" widths={[480, 760, 1040]} sizes="(max-width: 980px) 90vw, 460px" />
           </div>
           <div class="ap ap-b">
-            <Image src={photo('blue-hoodies.jpg')} alt="Members posing together in blue hoodies" widths={[400, 640, 900]} sizes="(max-width: 980px) 75vw, 380px" />
+            <Image src={sitePhoto('about-hoodies.jpg')} alt="Members posing together in blue hoodies" widths={[400, 640, 900]} sizes="(max-width: 980px) 75vw, 380px" />
           </div>
           <div class="ap ap-c">
-            <Image src={photo('ss26-thumbs-up.jpg')} alt="Two participants at SotonShip 26 giving a thumbs up" widths={[400, 640, 900]} sizes="(max-width: 980px) 70vw, 340px" />
+            <Image src={sitePhoto('about-thumbs-up.jpg')} alt="Two participants at SotonShip 26 giving a thumbs up" widths={[400, 640, 900]} sizes="(max-width: 980px) 70vw, 340px" />
           </div>
         </div>
         <section class="about-panel" aria-labelledby="about-h">

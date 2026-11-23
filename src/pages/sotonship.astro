@@ -4,10 +4,12 @@ import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
 import hackathons from '../data/hackathons.json';
 import { hasLink } from '../lib/events';
+import { findIn } from '../lib/photos';
 
 // Hackathon photos live in src/assets/hackathons/. Leave "photo" empty until there is one.
-const files = import.meta.glob<{ default: ImageMetadata }>('../assets/hackathons/*.{jpg,jpeg,png,webp}', { eager: true });
-const img = (file: string) => (file ? Object.entries(files).find(([path]) => path.endsWith(`/${file}`))?.[1].default : undefined);
+// The dashboard may file uploads in sub-folders, so search the whole folder.
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/hackathons/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true });
+const img = (file: string | null | undefined) => findIn(files, file);
 
 interface Edition {
   name: string;
@@ -558,6 +560,23 @@ const earlierPhotos = hackathons.earlierPhotos.map((p) => ({ ...p, image: img(p.
   }
 
   @media (max-width: 560px) {
+    /* Two logos to a row so the sponsor list stays short on a phone. */
+    .logos,
+    .logos--lead {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .logo-tile,
+    .logos--lead .logo-tile {
+      min-height: 84px;
+      padding: 14px 16px;
+    }
+
+    .logo-tile img {
+      max-height: 40px;
+    }
+
     .else-card {
       grid-template-columns: minmax(0, 1fr);
     }

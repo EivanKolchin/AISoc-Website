@@ -5,16 +5,19 @@ import Base from '../layouts/Base.astro';
 import site from '../data/site.json';
 import committee from '../data/committee.json';
 import { capitalise, numberWord } from '../lib/events';
+import { findIn } from '../lib/photos';
+import { emailsFor, mailTo } from '../lib/mail';
 
 // Committee photos, when there are any, live in src/assets/committee/.
-const photoFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/committee/*.{jpg,jpeg,png,webp}', { eager: true });
-const photoFor = (file: string) => (file ? Object.entries(photoFiles).find(([path]) => path.endsWith(`/${file}`))?.[1].default : undefined);
+// The dashboard may file uploads in sub-folders, so search the whole folder.
+const photoFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/committee/**/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true });
+const photoFor = (file: string | null) => findIn(photoFiles, file);
 
 const people = committee.people.map((person, i) => ({ ...person, id: `member-${i}`, image: photoFor(person.photo), glow: i % 4 }));
 const count = people.length;
 const intro = `${capitalise(numberWord(count))} students, elected for ${committee.year}. Pick anyone to see what they look after.`;
-const askLink = (topic: string, who: string) => `mailto:${site.email}?subject=${encodeURIComponent(`${topic} (for ${who})`)}`;
-const mailFor = (name: string) => `mailto:${site.email}?subject=${encodeURIComponent(`For ${name}`)}`;
+const askLink = (topic: string, who: string) => mailTo(emailsFor(who), topic);
+const mailFor = (person: { email?: string }) => mailTo(person.email ? [person.email] : [], 'Message from the AI Society website');
 const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes(name)).map((row) => row.topic);
 ---
 
@@ -42,6 +45,7 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
               )}
             </span>
             <span class="member-name">{person.name}</span>
+            {person.otherNames && <span class="member-aka">Also known as {person.otherNames}</span>}
             <span class="member-role">{person.role}</span>
           </button>
         </li>
@@ -72,6 +76,7 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
             </span>
             <div>
               <h2 id={`${person.id}-name`}>{person.name}</h2>
+              {person.otherNames && <p class="md-aka">Also known as {person.otherNames}</p>}
               <p class="md-role">{person.role}</p>
             </div>
           </div>
@@ -82,11 +87,20 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
               Ask {person.name.split(' ')[0]} about: {asksFor(person.name).join('; ').toLowerCase()}.
             </p>
           )}
-          <div class="actions">
-            <a class="btn btn-p" href={mailFor(person.name)}>
+          <div class="md-contact">
+            <a class="btn btn-p" href={mailFor(person)}>
               Email {person.name.split(' ')[0]}
             </a>
+            {person.email && (
+              <span class="md-address">
+                <span class="md-address-text">{person.email}</span>
+                <button class="md-copy" type="button" data-copy={person.email} aria-label={`Copy ${person.email}`}>
+                  Copy
+                </button>
+              </span>
+            )}
           </div>
+          {person.email && <p class="md-mail">The button opens an email to {person.name.split(' ')[0]} with {site.email} copied in.</p>}
         </div>
       </dialog>
     ))
@@ -105,7 +119,7 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
         ))
       }
     </div>
-    <p class="small-print">Each row opens an email to {site.email} with the subject filled in, so it reaches the right person.</p>
+    <p class="small-print">Each row opens an email to the right person with the subject filled in and {site.email} copied in.</p>
   </section>
 
   <section class="card note block--gap" aria-labelledby="next-h">
@@ -195,6 +209,12 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: -0.02em;
+  }
+
+  .member-aka {
+    margin-top: 3px;
+    font-size: 15px;
+    color: var(--ink2);
   }
 
   .member-role {
@@ -312,6 +332,12 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
     letter-spacing: -0.03em;
   }
 
+  .md-aka {
+    margin-top: 6px;
+    font-size: 17px;
+    color: #d6d7db;
+  }
+
   .md-role {
     margin-top: 6px;
     font-size: 19px;
@@ -327,6 +353,58 @@ const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes
   }
 
   .md-asks {
+    color: #a6a8ae;
+  }
+
+  .md-contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 4px;
+  }
+
+  /* The address written out, so it can be read off or copied to another device. */
+  .md-address {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    min-width: 0;
+  }
+
+  .md-address-text {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    user-select: all;
+  }
+
+  .md-copy {
+    flex: none;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 8px;
+    background: transparent;
+    color: #d6d7db;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .md-copy:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+  }
+
+  .md-mail {
+    margin-top: -4px;
+    font-size: 14.5px;
+    line-height: 1.5;
     color: #a6a8ae;
   }
 

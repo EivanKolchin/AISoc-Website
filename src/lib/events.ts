@@ -27,8 +27,40 @@ export const WD_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export const MON_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export function esc(value: string): string {
-  return String(value)
+const EMPTY_EVENT: Omit<EventItem, 'id' | 'title' | 'start'> = {
+  short: '',
+  type: '',
+  level: '',
+  end: null,
+  location: '',
+  locationShort: '',
+  with: [],
+  note: '',
+  stat: '',
+  summary: '',
+  blurb: '',
+  page: '',
+  recap: '',
+  recapLabel: '',
+};
+
+/**
+ * Events as read from src/data/events.json. The dashboard leaves out fields that are
+ * empty when it saves, so fill them back in here.
+ */
+export function eventList(raw: ReadonlyArray<Partial<EventItem>>): EventItem[] {
+  return raw
+    .filter((ev) => ev.id && ev.title && ev.start)
+    .map((ev) => {
+      const item = { ...EMPTY_EVENT, ...ev } as EventItem;
+      if (!item.short) item.short = item.title;
+      if (!item.end) item.end = null;
+      return item;
+    });
+}
+
+export function esc(value: string | null | undefined): string {
+  return String(value ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

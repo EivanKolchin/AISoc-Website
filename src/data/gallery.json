@@ -1,25 +1,28 @@
 {
   "intro": "Hackathons, workshops, talks and socials. Open any photo to see where it was taken. Send photos from your event to the committee and they will be added here.",
-  "events": {
-    "sotonship-26": {
+  "events": [
+    {
+      "id": "sotonship-26",
       "name": "SotonShip 26",
       "when": "16 to 18 October 2026",
       "where": "Barclays Eagle Labs, Southampton",
       "link": "/sotonship"
     },
-    "bt-24": {
+    {
+      "id": "bt-24",
       "name": "BT Hackathon '24",
       "when": "2024",
       "where": "",
       "link": "/sotonship"
     },
-    "sessions": {
+    {
+      "id": "sessions",
       "name": "Workshops and socials",
       "when": "",
       "where": "",
       "link": "/events"
     }
-  },
+  ],
   "photos": [
     {
       "file": "ss26-winners-2.jpg",

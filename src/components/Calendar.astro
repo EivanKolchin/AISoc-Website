@@ -4,7 +4,7 @@
 // The first draw happens here at build time; src/scripts/site.ts takes over in the
 // browser so today's date, the arrows and the event chips all work.
 import eventsData from '../data/events.json';
-import { type EventItem, startOfDay, upcoming } from '../lib/events';
+import { type EventItem, eventList, startOfDay, upcoming } from '../lib/events';
 import { afterWeekLine, calendarTitle, renderDetail, renderGrid } from '../lib/calendar';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { mode } = Astro.props;
-const events = eventsData as EventItem[];
+const events = eventList(eventsData.events);
 const now = new Date();
 const today = startOfDay(now);
 const view = mode === 'home' ? 'week' : 'month';

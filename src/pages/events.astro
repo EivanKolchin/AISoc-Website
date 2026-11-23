@@ -2,16 +2,16 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import '../styles/nextbar.css';
-import { photo } from '../lib/photos';
+import { sitePhoto } from '../lib/photos';
 import Calendar from '../components/Calendar.astro';
 import { SOCIAL_ICONS } from '../lib/icons';
 import site from '../data/site.json';
 import eventsData from '../data/events.json';
 import workshops from '../data/workshops.json';
-import { type EventItem, capitalise, numberWord, past, upcoming } from '../lib/events';
+import { type EventItem, eventList, capitalise, numberWord, past, upcoming } from '../lib/events';
 import { renderEventList, renderNextEvent } from '../lib/calendar';
 
-const events = eventsData as EventItem[];
+const events = eventList(eventsData.events);
 const now = new Date();
 const comingUp = upcoming(events, now);
 const earlier = past(events, now);
@@ -22,7 +22,7 @@ const slotLine = `Workshops run every ${slot.day} at ${slot.start} in ${slot.roo
 
 <Base hero title="Events" description={`Talks, workshops and hackathons from ${site.name}. Workshops run every ${slot.day} at ${slot.start}.`}>
   <section class="page-hero on-dark" aria-labelledby="events-h">
-    <Image class="page-hero-photo" src={photo('bt24-workshop-floor.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image class="page-hero-photo" src={sitePhoto('hero-events.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="page-hero-shade" aria-hidden="true"></div>
     <div class="page-hero-inner">
       <h1 id="events-h">Events</h1>

@@ -42,15 +42,15 @@ const usedEvents = galleryEvents.filter((ev) => photos.some((p) => p.event === e
             class="shot-btn"
             type="button"
             data-full={item.full}
-            data-alt={item.alt}
+            data-alt={item.alt ?? ""}
             data-event-name={item.eventInfo?.name ?? ''}
             data-place={item.place}
             data-link={item.eventInfo?.link ?? ''}
-            aria-label={`Open: ${item.alt}`}
+            aria-label={item.alt ? `Open: ${item.alt}` : "Open photo"}
           >
             <Image
               src={item.image}
-              alt={item.alt}
+              alt={item.alt ?? ""}
               widths={[480, 720, 1080]}
               sizes={i % 7 === 0 ? '(max-width: 980px) 100vw, 66vw' : '(max-width: 980px) 100vw, 33vw'}
               loading={i < 3 ? 'eager' : 'lazy'}
@@ -147,6 +147,33 @@ const usedEvents = galleryEvents.filter((ev) => photos.some((p) => p.event === e
     margin-left: 4px;
     color: var(--muted);
     font-weight: 500;
+  }
+
+  /* On a phone the filters wrap, so each becomes its own pill instead of one boxed row. */
+  @media (max-width: 560px) {
+    .filters {
+      display: flex;
+      gap: 8px;
+      padding: 0;
+      border: 0;
+    }
+
+    .filters .seg {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+
+    .filters .seg[aria-pressed='true'] {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .filters .seg[aria-pressed='true'] span {
+      color: rgba(255, 255, 255, 0.7);
+    }
   }
 
   .gallery {

@@ -230,13 +230,14 @@ export function renderDateList(list: EventItem[], emptyLine: string, kind: 'upco
       return (
         `<${tag} class="dl-ev${past ? ' dl-ev--past' : ''}"${link ? ` href="${esc(link)}"` : ''}>` +
         `<span class="dl-date"><span class="m">${MON_SHORT[start.getMonth()]}</span><span class="d">${start.getDate()}</span>${year}</span>` +
+        `<span class="dl-body">` +
         `<span class="dl-title">${esc(ev.title)}</span>` +
         `<span class="dl-meta">${ICON_CAL}${esc(when)}</span>` +
         (place ? `<span class="dl-meta">${ICON_PIN}${esc(place)}</span>` : '') +
         (past && ev.stat ? `<span class="dl-meta">${ICON_PEOPLE}${esc(capitalise(ev.stat))}</span>` : '') +
         (!past ? `<span class="dl-act"><a class="dl-add" href="/events/${esc(ev.id)}.ics" download aria-label="Add to calendar: ${esc(ev.title)}">Add to calendar</a>${pageLink}</span>` : '') +
         (past && link ? `<span class="dl-act"><span class="dl-recap">${ICON_PHOTOS}<span>${esc(ev.recapLabel || 'Recap')}</span></span></span>` : '') +
-        `</${tag}>`
+        `</span></${tag}>`
       );
     })
     .join('');

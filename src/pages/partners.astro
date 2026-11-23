@@ -3,9 +3,10 @@ import Base from '../layouts/Base.astro';
 import site from '../data/site.json';
 import partners from '../data/partners.json';
 import { hasLink } from '../lib/events';
+import { emailsFor, mailTo } from '../lib/mail';
 
 const contact = partners.contact;
-const mailto = `mailto:${site.email}?subject=${encodeURIComponent(`Partnerships (for ${contact.name})`)}`;
+const mailto = mailTo(emailsFor(contact.name), 'Partnering with the AI Society');
 ---
 
 <Base title="Partners" description={partners.intro}>
@@ -90,7 +91,7 @@ const mailto = `mailto:${site.email}?subject=${encodeURIComponent(`Partnerships 
   <section class="card note" style="margin-bottom: clamp(72px, 7vw, 112px)" aria-labelledby="contact-h">
     <div class="note-text">
       <h2 id="contact-h">Who to contact</h2>
-      <p>{contact.name}, {contact.role}. Write to {site.email} and the message is passed straight on.</p>
+      <p>{contact.name}, {contact.role}. Your email goes straight to them, with {site.email} copied in.</p>
     </div>
     <a class="btn btn-p" href={mailto}>Email partnerships</a>
   </section>

@@ -5,8 +5,9 @@ import ProjectPlate from '../components/ProjectPlate.astro';
 import site from '../data/site.json';
 import projects from '../data/projects.json';
 import { hasLink } from '../lib/events';
+import { emailsFor, mailTo } from '../lib/mail';
 
-const mailto = `mailto:${site.email}?subject=${encodeURIComponent(`A project idea (for ${projects.lead})`)}`;
+const mailto = mailTo(emailsFor(projects.lead), 'A project idea');
 ---
 
 <Base title="Projects" description={projects.intro}>

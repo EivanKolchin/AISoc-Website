@@ -811,16 +811,6 @@ a.card:hover {
   overflow: visible;
 }
 
-@media (max-width: 980px) {
-  .cal-scroll {
-    overflow-x: auto;
-  }
-
-  .mc-peek {
-    display: none;
-  }
-}
-
 .cal-week {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -1102,11 +1092,14 @@ a.card:hover {
   background: var(--surface2);
 }
 
-.mcell:hover {
-  z-index: 2;
-  background: #fff;
-  box-shadow: 0 0 0 1px var(--line), 0 16px 34px -16px rgba(15, 20, 26, 0.35);
-  transform: scale(1.04);
+/* Only with a real pointer: on a touch screen a tap would leave the tile stuck enlarged. */
+@media (hover: hover) {
+  .mcell:hover {
+    z-index: 2;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line), 0 16px 34px -16px rgba(15, 20, 26, 0.35);
+    transform: scale(1.04);
+  }
 }
 
 .mcell.off {
@@ -1150,6 +1143,134 @@ a.card:hover {
 @media (prefers-reduced-motion: reduce) {
   .mcell:hover {
     transform: none;
+  }
+}
+
+/* Tablets: the whole month fits the card, so nothing scrolls sideways. The hover
+   preview needs room beside the card, so it is left out here. */
+@media (max-width: 980px) {
+  .cal-month,
+  .cal-week {
+    min-width: 0;
+  }
+
+  .cal-dows,
+  .cal-cells {
+    gap: 6px;
+  }
+
+  .mcell {
+    min-height: 96px;
+    padding: 8px;
+  }
+
+  .mchip {
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .mc-title {
+    font-size: 12.5px;
+  }
+
+  .mc-peek {
+    display: none;
+  }
+}
+
+/* Phones: every day is a small square. A day with an event turns into that event's
+   card, in the same colours, and a tap opens the details underneath. */
+@media (max-width: 640px) {
+  .cal-head--card {
+    flex-wrap: nowrap;
+    padding: 16px 12px 10px 16px;
+  }
+
+  .cal-head--card h2 {
+    font-size: 22px;
+  }
+
+  .cal-scroll {
+    padding: 2px 12px 14px;
+  }
+
+  .cal-dows {
+    gap: 4px;
+    padding: 0;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .cal-cells {
+    gap: 4px;
+  }
+
+  .mcell {
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    aspect-ratio: 1;
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  .mnum {
+    position: relative;
+    z-index: 2;
+    align-self: center;
+    min-width: 26px;
+    height: 26px;
+    margin: 0;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .mchip {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    max-height: none;
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  .mc-title {
+    display: none;
+  }
+
+  .mcell:has(.mchip) .mnum {
+    color: #fff;
+  }
+
+  .mcell:has(.mchip.past) .mnum {
+    color: var(--soft);
+  }
+
+  .mcell:has(.mchip[aria-pressed='true']) .mnum {
+    color: #fff;
+  }
+
+  .mcell.today:has(.mchip[aria-pressed='true']) .mnum {
+    background: #fff;
+    color: var(--accent);
+  }
+
+  /* A second event on the same day shows as a small dot in the corner. */
+  .mchip + .mchip {
+    z-index: 3;
+    inset: 3px 3px auto auto;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--surface);
+  }
+
+  .cal-week {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cal-day {
+    min-height: 0;
   }
 }
 
@@ -1298,8 +1419,15 @@ aside > .detail-empty {
   box-shadow: 0 1px 0 var(--line), 0 12px 30px -18px rgba(15, 20, 26, 0.35);
 }
 
+.dl-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
 .dl-date {
-  grid-row: span 4;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2201,15 +2329,18 @@ a.dl-ev:focus-visible .dl-recap {
     font-size: 26px;
   }
 
+  /* The three marks stay on one line, scaled to the screen. */
   .marks {
-    gap: 14px 16px;
+    flex-wrap: nowrap;
+    gap: clamp(10px, 3.5vw, 16px);
   }
 
   .marks img {
-    height: 44px;
+    height: clamp(30px, 10.5vw, 44px);
   }
 
   .marks-rule {
-    height: 38px;
+    flex: none;
+    height: clamp(26px, 9vw, 38px);
   }
 }

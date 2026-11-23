@@ -193,7 +193,12 @@
       "name": "BT Hackathon '24",
       "when": "2024",
       "where": "",
+      "summary": "",
       "blurb": "150+ students, more than 40 final submissions and six industry mentors on site.",
+      "facts": [],
+      "tracks": [],
+      "links": [],
+      "photos": [],
       "results": [
         {
           "track": "Overall",
@@ -208,14 +213,20 @@
             "photo": ""
           }
         }
-      ]
+      ],
+      "sponsors": []
     },
     {
       "id": "iet-aisoc-2024",
       "name": "IET x AISoc Hackathon",
       "when": "26 and 27 October 2024",
       "where": "Highfield Campus",
+      "summary": "",
       "blurb": "A model-training challenge with ECS and the IET Solent Network. The top ten teams pitched, for prizes of £500, £300 and £200.",
+      "facts": [],
+      "tracks": [],
+      "links": [],
+      "photos": [],
       "results": [
         {
           "track": "Overall",
@@ -230,14 +241,20 @@
             "photo": ""
           }
         }
-      ]
+      ],
+      "sponsors": []
     },
     {
       "id": "hackai-24",
       "name": "HackAI 24",
       "when": "10 and 11 February 2024",
       "where": "",
+      "summary": "",
       "blurb": "Teams used a large language model running on their own machines to answer aeronautics questions. The five highest-scoring teams presented their methods to the judges and sponsors.",
+      "facts": [],
+      "tracks": [],
+      "links": [],
+      "photos": [],
       "results": [
         {
           "track": "Overall",
@@ -252,14 +269,20 @@
             "photo": ""
           }
         }
-      ]
+      ],
+      "sponsors": []
     },
     {
       "id": "hackai-23",
       "name": "HackAI 23",
       "when": "March 2023",
       "where": "",
+      "summary": "",
       "blurb": "",
+      "facts": [],
+      "tracks": [],
+      "links": [],
+      "photos": [],
       "results": [
         {
           "track": "Overall",
@@ -274,14 +297,20 @@
             "photo": ""
           }
         }
-      ]
+      ],
+      "sponsors": []
     },
     {
       "id": "hackai-22",
       "name": "HackAI 22",
       "when": "February 2022",
       "where": "",
+      "summary": "",
       "blurb": "",
+      "facts": [],
+      "tracks": [],
+      "links": [],
+      "photos": [],
       "results": [
         {
           "track": "Overall",
@@ -296,7 +325,8 @@
             "photo": ""
           }
         }
-      ]
+      ],
+      "sponsors": []
     }
   ],
   "earlierPhotos": [

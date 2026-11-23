@@ -101,9 +101,19 @@ export function renderMonth(anchor: Date, events: EventItem[], selectedId: strin
     html += `<span class="mnum">${date.getDate()}${isToday ? '<span class="sr-only">, today</span>' : ''}</span>`;
     for (const ev of dayEvents) {
       const pastClass = isPast(ev, today) ? ' past' : '';
-      const start = eventStart(ev);
-      const time = hasTime(ev.start) && sameDay(start, date) ? fmtTime(start) : eventDays(ev).length > 1 ? 'All weekend' : 'All day';
-      html += `<button class="mchip${pastClass}" type="button" data-ev="${esc(ev.id)}" aria-pressed="${ev.id === selectedId}" aria-label="${esc(chipLabel(ev, date))}"><span class="mc-time">${esc(time)}</span><span class="mc-title">${esc(ev.short)}</span></button>`;
+      // The square shows only the name. Hovering slides out a short preview; the time
+      // and place stay for the preview and the details panel.
+      const wd = (date.getDay() + 6) % 7;
+      const multi = eventDays(ev).length > 1;
+      const when = multi ? whenLine(ev) : [dayLabel(eventStart(ev)), whenLine(ev)].filter(Boolean).join(', ');
+      const place = ev.location === 'Online' ? 'Online' : ev.location;
+      const hint = isPast(ev, today) ? 'See what happened' : 'Open the details';
+      html +=
+        `<button class="mchip${pastClass}${wd >= 5 ? ' flip' : ''}" type="button" data-ev="${esc(ev.id)}" aria-pressed="${ev.id === selectedId}" aria-label="${esc(chipLabel(ev, date))}">` +
+        `<span class="mc-title">${esc(ev.short)}</span>` +
+        `<span class="mc-peek" aria-hidden="true"><span class="pk-title">${esc(ev.title)}</span><span class="pk-when">${esc(when)}</span>` +
+        (place ? `<span class="pk-place">${esc(place)}</span>` : '') +
+        `<span class="pk-hint">${hint}</span></span></button>`;
     }
     html += '</div>';
   }

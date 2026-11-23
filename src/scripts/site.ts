@@ -102,6 +102,12 @@ function initCalendar(root: HTMLElement): void {
       other.setAttribute('aria-pressed', String(other.dataset.ev === selectedId));
     });
     drawDetail();
+    // The preview finishes its move to the right and the details panel grows in.
+    chip.classList.add('launch');
+    window.setTimeout(() => chip.classList.remove('launch'), 450);
+    detailEl.classList.remove('detail-enter');
+    void detailEl.offsetWidth;
+    detailEl.classList.add('detail-enter');
     // On a phone the details sit below the grid: bring them into view.
     const box = detailEl.getBoundingClientRect();
     if (box.top > window.innerHeight - 120 || box.bottom < 0) detailEl.scrollIntoView({ block: 'nearest' });

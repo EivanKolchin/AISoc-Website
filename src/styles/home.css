@@ -223,7 +223,7 @@
 
 .about-row {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
   gap: 48px clamp(32px, 4vw, 64px);
   align-items: start;
   margin-top: clamp(80px, 8vw, 128px);
@@ -234,78 +234,59 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
+/* Three photos in a clean zig-zag: the group photo first, then two a little smaller,
+   each overlapping the one before. The Who we are card overlaps the left edge. */
 .about-photo {
   position: relative;
-  isolation: isolate;
   grid-column: 6 / 13;
   grid-row: 1;
   align-self: start;
+  aspect-ratio: 1 / 1.37;
 }
 
-.about-main {
-  position: relative;
-  isolation: isolate;
-}
-
-.about-main::before {
-  content: '';
+.ap {
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  transform: translate(16px, 16px);
-  border-radius: 6px;
-  background: var(--grad);
 }
 
-.about-photo img {
+.ap img {
   display: block;
-  box-shadow: 0 18px 40px -24px rgba(15, 20, 26, 0.45);
   width: 100%;
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 6px;
-}
-
-/* The two newer photos sit on top of the main one's lower edge, side by side,
-   clear of the Who we are card. */
-.about-photo {
-  margin-bottom: 150px;
-}
-
-.about-main {
-  z-index: 1;
-}
-
-.about-minis {
-  position: absolute;
-  z-index: 2;
-  right: -40px;
-  bottom: -116px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  align-items: start;
-}
-
-.about-minis img {
   border: 6px solid var(--porc);
-  border-radius: 12px;
-  box-shadow: 0 24px 48px -22px rgba(15, 20, 26, 0.55);
+  border-radius: 14px;
+  box-shadow: 0 26px 50px -26px rgba(15, 20, 26, 0.55);
 }
 
-.about-minis img:first-child {
-  margin-top: 28px;
+.ap-a {
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 86%;
+}
+
+.ap-b {
+  z-index: 2;
+  top: 34.7%;
+  right: 0;
+  width: 72%;
+}
+
+.ap-c {
+  z-index: 3;
+  top: 65%;
+  left: 4%;
+  width: 64%;
 }
 
 .about-panel {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   grid-column: 1 / 7;
   grid-row: 1;
   align-self: start;
-  margin-top: 96px;
+  margin-top: 120px;
   padding: clamp(28px, 3vw, 44px);
   border-radius: 6px;
   background: #14171c;
@@ -443,19 +424,6 @@
 
   .about-photo {
     grid-column: 1 / 13;
-    margin: 0 16px 0 0;
-  }
-
-  .about-minis {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    width: auto;
-    margin: -40px -16px 0 8%;
-  }
-
-  .about-minis img:first-child {
-    margin-top: 20px;
   }
 
   .about-panel {

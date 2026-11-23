@@ -1,0 +1,569 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import hackathons from '../data/hackathons.json';
+import { hasLink } from '../lib/events';
+
+// Hackathon photos live in src/assets/hackathons/. Leave "photo" empty until there is one.
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/hackathons/*.{jpg,jpeg,png,webp}', { eager: true });
+const img = (file: string) => (file ? Object.entries(files).find(([path]) => path.endsWith(`/${file}`))?.[1].default : undefined);
+
+interface Edition {
+  name: string;
+  when: string;
+  where: string;
+  summary?: string;
+  blurb: string;
+  facts?: { label: string; value: string }[];
+  tracks?: { name: string; text: string }[];
+  links?: { label: string; url: string }[];
+  photos?: { file: string; alt: string }[];
+  sponsors?: { tier: string; items: { name: string; logo: string }[] }[];
+  results: { track: string; winner: Place; runnerUp: Place }[];
+}
+interface Place {
+  team: string;
+  project: string;
+  photo: string;
+}
+
+const editions = hackathons.editions as Edition[];
+const latest = editions[0];
+const heroPhoto = img(hackathons.heroPhoto);
+const links = (latest.links ?? []).filter((link) => hasLink(link.url));
+const facts = latest.facts ?? [];
+const tracks = latest.tracks ?? [];
+const sponsors = latest.sponsors ?? [];
+const latestPhotos = (latest.photos ?? []).map((p) => ({ ...p, image: img(p.file) })).filter((p) => p.image);
+const earlierPhotos = hackathons.earlierPhotos.map((p) => ({ ...p, image: img(p.file) })).filter((p) => p.image);
+---
+
+<Base hero title="SotonShip and hackathons" description={hackathons.intro}>
+  <section class="page-hero on-dark" aria-labelledby="ship-h">
+    {heroPhoto && <Image class="page-hero-photo" src={heroPhoto} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />}
+    <div class="page-hero-shade" aria-hidden="true"></div>
+    <div class="page-hero-inner">
+      <h1 id="ship-h">SotonShip</h1>
+      <p>{hackathons.intro}</p>
+      <div class="actions">
+        {links.map((link, i) => <a class:list={['btn', i === 0 ? 'btn-p' : 'btn-o']} href={link.url}>{link.label}</a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="block ship-latest" aria-labelledby="latest-h">
+    <div class="ship-intro">
+      <div>
+        <h2 class="h-sec" id="latest-h">Looking back at {latest.name}</h2>
+        <p class="sec-intro">{latest.summary}</p>
+      </div>
+      <dl class="ruled ship-facts">
+        {
+          facts.map((fact) => (
+            <>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </>
+          ))
+        }
+      </dl>
+    </div>
+
+    {
+      tracks.length > 0 && (
+        <>
+          <h3 class="h-sub tracks-h">The three tracks</h3>
+          <ul class="tracks">
+            {tracks.map((track) => (
+              <li class="track">
+                <h4>{track.name}</h4>
+                {track.text && <p>{track.text}</p>}
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+
+    {
+      latestPhotos.length > 0 && (
+        <ul class="ship-photos" aria-label={`Photos from ${latest.name}`}>
+          {latestPhotos.map((photo) => (
+            <li>
+              <Image src={photo.image!} alt={photo.alt} widths={[480, 720, 960]} sizes="(max-width: 980px) 100vw, 33vw" />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  {
+    sponsors.length > 0 && (
+      <section class="block" id="sponsors" aria-labelledby="sponsors-h">
+        <h2 class="h-sec" id="sponsors-h">{latest.name} was backed by</h2>
+        {sponsors.map((tier, i) => (
+          <div class="tier">
+            <h3 class="tier-name">{tier.tier}</h3>
+            <ul class:list={['logos', { 'logos--lead': i === 0 }]}>
+              {tier.items.map((item) => (
+                <li class="logo-tile">
+                  <img src={item.logo} alt={item.name} loading="lazy" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  <section class="block" aria-labelledby="results-h">
+    <h2 class="h-sec" id="results-h">Every hackathon we have run</h2>
+    <p class="sec-intro">The newest first. Open any of them for the winners and runners-up.</p>
+    <div class="editions">
+      {
+        editions.map((edition, i) => (
+          <details class="edition" open={i === 0}>
+            <summary>
+              <span class="ed-name">{edition.name}</span>
+              <span class="ed-meta">{[edition.when, edition.where].filter(Boolean).join(', ')}</span>
+              <span class="ed-open btn btn-o" aria-hidden="true">
+                <span class="when-closed">Winners and runners-up</span>
+                <span class="when-open">Hide results</span>
+              </span>
+            </summary>
+            <div class="ed-body">
+              {edition.blurb && <p class="ed-blurb">{edition.blurb}</p>}
+              {edition.results.length > 0 ? (
+                <div class="results">
+                  {edition.results.map((result) => (
+                    <section class="result" aria-label={result.track}>
+                      <h3>{result.track}</h3>
+                      <div class="podium">
+                        {(
+                          [
+                            ['Winners', result.winner],
+                            ['Runners-up', result.runnerUp],
+                          ] as [string, Place][]
+                        ).map(([label, place]) => {
+                          const photo = img(place.photo);
+                          return (
+                            <figure class="place">
+                              <div class="place-photo">
+                                {photo ? <Image src={photo} alt={`${place.team || label}, ${result.track}`} widths={[400, 640]} sizes="(max-width: 980px) 50vw, 25vw" /> : <span class="place-mark" aria-hidden="true">{label === 'Winners' ? '1' : '2'}</span>}
+                              </div>
+                              <figcaption>
+                                <span class="place-label">{label}</span>
+                                <span class="place-team">{place.team || 'Results to be added'}</span>
+                                {place.project && <span class="place-project">{place.project}</span>}
+                              </figcaption>
+                            </figure>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              ) : (
+                <p class="ed-blurb">Results for this one will be added here.</p>
+              )}
+            </div>
+          </details>
+        ))
+      }
+    </div>
+    {
+      earlierPhotos.length > 0 && (
+        <p class="earlier-cap">From BT Hackathon '24</p>
+        <ul class="ship-photos earlier" aria-label="Photos from BT Hackathon '24">
+          {earlierPhotos.map((photo) => (
+            <li>
+              <Image src={photo.image!} alt={photo.alt} widths={[480, 720, 960]} sizes="(max-width: 980px) 100vw, 33vw" />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section class="block block--last" aria-labelledby="more-h">
+    <h2 class="h-sec" id="more-h">More hackathons in Southampton</h2>
+    <p class="sec-intro">Other societies run hackathons through the year. Follow them to hear about the next one.</p>
+    <ul class="elsewhere">
+      {
+        hackathons.elsewhere.map((item) => (
+          <li class="else-card">
+            <div class:list={['else-logo', item.logoTone === 'light' ? 'else-logo--light' : 'plate']}>
+              {item.logo ? <img src={item.logo} alt={`${item.name} logo`} loading="lazy" /> : <span class="else-initial" aria-hidden="true">{item.name.slice(0, 1)}</span>}
+            </div>
+            <div class="else-text">
+              <h3>{item.name}</h3>
+              <p class="else-by">{item.by}</p>
+              <p>{item.text}</p>
+              <p class="actions">
+                {item.links.filter((link) => hasLink(link.url)).map((link, i) => <a class:list={['btn', i === 0 ? 'btn-g' : 'btn-s']} href={link.url}>{link.label}</a>)}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .ship-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 32px clamp(32px, 5vw, 80px);
+    align-items: start;
+  }
+
+  .ship-facts {
+    margin-top: 6px;
+  }
+
+  .tracks-h {
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+
+  .tracks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .earlier {
+    margin-top: 12px;
+  }
+
+  .earlier-cap {
+    margin-top: 32px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .tier + .tier {
+    margin-top: 32px;
+  }
+
+  .tier-name {
+    margin: 26px 0 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(190px, 100%), 1fr));
+    gap: 12px;
+  }
+
+  .logos--lead {
+    grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  }
+
+  .logo-tile {
+    display: grid;
+    place-items: center;
+    min-height: 112px;
+    padding: 22px 26px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+
+  .logos--lead .logo-tile {
+    min-height: 136px;
+  }
+
+  .logo-tile img {
+    max-width: 100%;
+    max-height: 56px;
+    object-fit: contain;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .logo-tile {
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    }
+
+    .logo-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 1px var(--line), 0 16px 30px -18px rgba(15, 20, 26, 0.35);
+    }
+  }
+
+  .else-logo--light {
+    background: #fff;
+    box-shadow: inset -1px 0 0 var(--line);
+  }
+
+  .track {
+    position: relative;
+    padding: 26px 24px 24px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .track::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    width: 44px;
+    height: 3px;
+    background: var(--grad);
+  }
+
+  .track h4 {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .track p {
+    margin-top: 8px;
+    color: var(--muted);
+  }
+
+  .ship-photos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .ship-photos img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .editions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .edition {
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .edition summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+    gap: 8px 24px;
+    align-items: center;
+    padding: 22px 24px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .edition summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ed-name {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .ed-meta {
+    color: var(--muted);
+  }
+
+  .ed-open {
+    pointer-events: none;
+  }
+
+  .when-open,
+  .edition[open] .when-closed {
+    display: none;
+  }
+
+  .edition[open] .when-open {
+    display: inline;
+  }
+
+  .edition summary:focus-visible {
+    outline-offset: -4px;
+    border-radius: 16px;
+  }
+
+  .ed-body {
+    padding: 0 24px 26px;
+  }
+
+  .ed-blurb {
+    max-width: 44em;
+    color: var(--muted);
+  }
+
+  .results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+    gap: 28px 24px;
+    margin-top: 8px;
+  }
+
+  .result h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .podium {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .place {
+    margin: 0;
+  }
+
+  .place-photo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 12px;
+    background:
+      radial-gradient(60% 70% at 75% 25%, rgba(31, 111, 209, 0.55), transparent 70%),
+      radial-gradient(55% 65% at 20% 85%, rgba(30, 64, 175, 0.5), transparent 70%),
+      #0b0e12;
+  }
+
+  .place-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .place-mark {
+    color: #fff;
+    font-size: 56px;
+    font-weight: 650;
+    letter-spacing: -0.04em;
+  }
+
+  .place figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 10px;
+  }
+
+  .place-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .place-team {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .place-project {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .elsewhere {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+    gap: 16px;
+  }
+
+  .else-card {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .else-logo {
+    display: grid;
+    place-items: center;
+    padding: 22px;
+  }
+
+  .else-logo img {
+    width: 100%;
+    max-height: 96px;
+    object-fit: contain;
+  }
+
+  .else-initial {
+    font-size: 54px;
+    font-weight: 650;
+  }
+
+  .else-text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+  }
+
+  .else-text h3 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .else-by {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .else-text .actions {
+    margin-top: 8px;
+  }
+
+  @media (max-width: 980px) {
+    .ship-intro {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ship-photos {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .edition summary {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ed-open {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .else-card {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .else-logo {
+      min-height: 140px;
+    }
+  }
+</style>

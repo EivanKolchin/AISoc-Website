@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectPanel from '../components/ProjectPanel.astro';
+import ProjectPlate from '../components/ProjectPlate.astro';
+import site from '../data/site.json';
+import projects from '../data/projects.json';
+import { hasLink } from '../lib/events';
+
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent(`A project idea (for ${projects.lead})`)}`;
+---
+
+<Base title="Projects" description={projects.intro}>
+  <div class="page-head" style="padding-bottom: clamp(40px, 4vw, 64px)">
+    <div class="page-head-text">
+      <h1 class="h-page">Projects</h1>
+      <p>{projects.intro}</p>
+    </div>
+  </div>
+
+  {projects.flagships.map((project, index) => <ProjectPanel project={project} flip={index % 2 === 1} />)}
+
+  <section class="block" style="padding-bottom: clamp(64px, 7vw, 112px)" aria-labelledby="small-h">
+    <h2 class="h-sec" id="small-h" style="margin-bottom: 28px">Smaller builds</h2>
+    <div class="smalls">
+      {
+        projects.small.map((item) => {
+          const linked = hasLink(item.action.url);
+          const Tag = linked ? 'a' : 'article';
+          return (
+            <Tag class="card small" id={item.id} href={linked ? item.action.url : undefined}>
+              <div class="plate small-plate">
+                <ProjectPlate kind={item.plate} />
+              </div>
+              <div class="small-text">
+                <h3>{item.name}</h3>
+                <p>{item.summary}</p>
+                {linked && (
+                  <p class="small-act">
+                    <span class="lnk">{item.action.label}</span>
+                  </p>
+                )}
+              </div>
+            </Tag>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <section class="card note" style="margin-bottom: clamp(72px, 7vw, 112px)" aria-labelledby="idea-h">
+    <div class="note-text">
+      <h2 id="idea-h">Have an idea of your own?</h2>
+      <p>Bring it to {projects.lead}, who leads projects. If it needs a team or a room, that is what the society is for.</p>
+    </div>
+    <a class="btn btn-s" href={mailto}>Email the projects team</a>
+  </section>
+</Base>

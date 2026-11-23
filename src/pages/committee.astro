@@ -1,0 +1,369 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import committee from '../data/committee.json';
+import { capitalise, numberWord } from '../lib/events';
+
+// Committee photos, when there are any, live in src/assets/committee/.
+const photoFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/committee/*.{jpg,jpeg,png,webp}', { eager: true });
+const photoFor = (file: string) => (file ? Object.entries(photoFiles).find(([path]) => path.endsWith(`/${file}`))?.[1].default : undefined);
+
+const people = committee.people.map((person, i) => ({ ...person, id: `member-${i}`, image: photoFor(person.photo), glow: i % 4 }));
+const count = people.length;
+const intro = `${capitalise(numberWord(count))} students, elected for ${committee.year}. Pick anyone to see what they look after.`;
+const askLink = (topic: string, who: string) => `mailto:${site.email}?subject=${encodeURIComponent(`${topic} (for ${who})`)}`;
+const mailFor = (name: string) => `mailto:${site.email}?subject=${encodeURIComponent(`For ${name}`)}`;
+const asksFor = (name: string) => committee.ask.filter((row) => row.who.includes(name)).map((row) => row.topic);
+---
+
+<Base title="Meet the committee" description={intro}>
+  <div class="page-head">
+    <div class="page-head-text">
+      <h1 class="h-page">Meet the committee</h1>
+      <p>{intro}</p>
+    </div>
+    <a class="btn btn-o" href={`mailto:${site.email}`}>{site.email}</a>
+  </div>
+
+  <ul class="members" aria-label="Committee members">
+    {
+      people.map((person) => (
+        <li>
+          <button class="member" type="button" data-dialog-open={person.id} aria-haspopup="dialog">
+            <span class:list={['member-photo', `glow-${person.glow}`]}>
+              {person.image ? (
+                <Image src={person.image} alt="" widths={[320, 480]} sizes="(max-width: 560px) 50vw, 260px" />
+              ) : (
+                <span class="member-initials" aria-hidden="true">
+                  {person.initials}
+                </span>
+              )}
+            </span>
+            <span class="member-name">{person.name}</span>
+            <span class="member-role">{person.role}</span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    people.map((person) => (
+      <dialog class="member-dialog on-dark" id={person.id} aria-labelledby={`${person.id}-name`}>
+        <div class="md-inner">
+          <form method="dialog" class="md-close-form">
+            <button class="md-close" aria-label="Close">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </form>
+          <div class="md-head">
+            <span class:list={['member-photo', 'md-photo', `glow-${person.glow}`]}>
+              {person.image ? (
+                <Image src={person.image} alt={person.name} widths={[320, 480]} sizes="160px" />
+              ) : (
+                <span class="member-initials" aria-hidden="true">
+                  {person.initials}
+                </span>
+              )}
+            </span>
+            <div>
+              <h2 id={`${person.id}-name`}>{person.name}</h2>
+              <p class="md-role">{person.role}</p>
+            </div>
+          </div>
+          <p class="md-about">{person.about}</p>
+          {person.bio && <p class="md-bio">{person.bio}</p>}
+          {asksFor(person.name).length > 0 && (
+            <p class="md-asks">
+              Ask {person.name.split(' ')[0]} about: {asksFor(person.name).join('; ').toLowerCase()}.
+            </p>
+          )}
+          <div class="actions">
+            <a class="btn btn-p" href={mailFor(person.name)}>
+              Email {person.name.split(' ')[0]}
+            </a>
+          </div>
+        </div>
+      </dialog>
+    ))
+  }
+
+  <section class="block" aria-labelledby="ask-h">
+    <h2 class="h-sec" id="ask-h">Who to ask</h2>
+    <div class="ask-list">
+      {
+        committee.ask.map((row) => (
+          <a class="ask" href={askLink(row.topic, row.who)}>
+            <span class="topic">{row.topic}</span>
+            <span class="who">{row.who}</span>
+            <span class="role">{row.role}</span>
+          </a>
+        ))
+      }
+    </div>
+    <p class="small-print">Each row opens an email to {site.email} with the subject filled in, so it reaches the right person.</p>
+  </section>
+
+  <section class="card note block--gap" aria-labelledby="next-h">
+    <div class="note-text">
+      <h2 id="next-h">Want to run it next year?</h2>
+      <p>Committee roles are elected by members. Add the free membership on SUSU to vote and to stand.</p>
+    </div>
+    <a class="btn btn-o btn-susu" href={site.membership.url}><img class="btn-susu-mark" src="/brand/susu-mark-white.png" alt="" width="27" height="23" loading="lazy" /><span>Membership on SUSU</span></a>
+  </section>
+</Base>
+
+<style>
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+    gap: 28px 20px;
+    padding-bottom: clamp(64px, 6vw, 96px);
+  }
+
+  .member {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .member-photo {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #0b0e12;
+  }
+
+  .member-photo::before {
+    content: '';
+    position: absolute;
+    inset: -10%;
+    z-index: -1;
+    filter: blur(22px);
+  }
+
+  .glow-0::before {
+    background: radial-gradient(45% 50% at 75% 25%, rgba(31, 111, 209, 0.95), transparent 72%), radial-gradient(45% 50% at 25% 80%, rgba(30, 64, 175, 0.9), transparent 72%);
+  }
+
+  .glow-1::before {
+    background: radial-gradient(45% 50% at 25% 25%, rgba(31, 155, 209, 0.85), transparent 72%), radial-gradient(45% 50% at 80% 75%, rgba(31, 111, 209, 0.9), transparent 72%);
+  }
+
+  .glow-2::before {
+    background: radial-gradient(45% 50% at 70% 75%, rgba(30, 64, 175, 0.95), transparent 72%), radial-gradient(40% 45% at 25% 30%, rgba(255, 150, 104, 0.75), transparent 72%);
+  }
+
+  .glow-3::before {
+    background: radial-gradient(45% 50% at 30% 70%, rgba(31, 111, 209, 0.9), transparent 72%), radial-gradient(45% 50% at 75% 25%, rgba(31, 155, 209, 0.8), transparent 72%);
+  }
+
+  .member-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .member-initials {
+    color: #fff;
+    font-size: clamp(44px, 4vw, 64px);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+  }
+
+  .member-name {
+    margin-top: 16px;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .member-role {
+    margin-top: 4px;
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .member-photo {
+      transition:
+        transform 0.22s ease-out,
+        box-shadow 0.22s ease-out;
+    }
+
+    .member:hover .member-photo,
+    .member:focus-visible .member-photo {
+      transform: scale(1.04);
+      box-shadow: 0 18px 40px -18px rgba(16, 20, 24, 0.45);
+    }
+  }
+
+  .member:focus-visible {
+    outline: none;
+  }
+
+  .member:focus-visible .member-photo {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  /* The expanded view */
+
+  .member-dialog {
+    width: min(640px, calc(100% - 32px));
+    max-height: calc(100% - 32px);
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    background: #14171c;
+    color: #f4f4f5;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  .member-dialog::backdrop {
+    background: rgba(11, 14, 18, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .member-dialog[open] {
+      animation: md-in 0.22s ease-out;
+    }
+
+    @keyframes md-in {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+    }
+  }
+
+  .md-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: clamp(24px, 4vw, 40px);
+  }
+
+  .md-close-form {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  }
+
+  .md-close {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .md-close:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .md-head {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-right: 48px;
+  }
+
+  .md-photo {
+    flex: none;
+    width: 132px;
+    border-radius: 50%;
+  }
+
+  .md-photo .member-initials {
+    font-size: 44px;
+  }
+
+  .md-head h2 {
+    font-size: clamp(28px, 3vw, 38px);
+    font-weight: 650;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .md-role {
+    margin-top: 6px;
+    font-size: 19px;
+    color: #a6a8ae;
+  }
+
+  .md-about,
+  .md-bio,
+  .md-asks {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #d6d7db;
+  }
+
+  .md-asks {
+    color: #a6a8ae;
+  }
+
+  .member-dialog :focus-visible {
+    outline-color: var(--accent);
+  }
+
+  .ask-list {
+    margin-top: 18px;
+  }
+
+  .block--gap {
+    margin-bottom: clamp(72px, 7vw, 112px);
+  }
+
+  @media (max-width: 560px) {
+    .members {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px 14px;
+    }
+
+    .member-name {
+      font-size: 18px;
+    }
+
+    .member-role {
+      font-size: 14px;
+    }
+
+    .md-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .md-photo {
+      width: 104px;
+    }
+  }
+</style>

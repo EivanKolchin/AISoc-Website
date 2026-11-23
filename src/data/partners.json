@@ -1,0 +1,52 @@
+{
+  "intro": "The organisations working with the society this year. They give talks, run sessions and meet the students who build things.",
+  "contact": {
+    "name": "Faran Afzal",
+    "role": "Head of Partnerships"
+  },
+  "partners": [
+    {
+      "name": "BAE Systems",
+      "url": "https://www.baesystems.com",
+      "logo": "/partners/bae-systems.svg",
+      "since": "2026 to 2027",
+      "about": "BAE Systems is a British defence, security and aerospace company."
+    }
+  ],
+  "audience": {
+    "asOf": "23 November 2026",
+    "facts": [
+      {
+        "value": "120",
+        "label": "builders at SotonShip 26, our 48-hour hackathon in October 2026"
+      },
+      {
+        "value": "90",
+        "label": "people at Someone Should Probably Build That on 17 November 2026"
+      },
+      {
+        "value": "690",
+        "label": "members on our Discord server"
+      },
+      {
+        "value": "1,602",
+        "label": "followers on Instagram"
+      }
+    ]
+  },
+  "ways": [
+    {
+      "title": "Set a hackathon track",
+      "text": "SotonShip 26 ran three tracks set by partners: Southampton Coastal City, FinTech and Responsible AI."
+    },
+    {
+      "title": "Give a talk",
+      "text": "Researchers and engineers speak to members about what they are building now."
+    },
+    {
+      "title": "Run a session",
+      "text": "Hands-on workshops alongside our own Thursday series."
+    }
+  ],
+  "sotonshipNote": "SotonShip 26 had its own sponsors, from Deutsche Bank and JPMorganChase to Holistic AI."
+}

@@ -1,0 +1,45 @@
+---
+import site from '../data/site.json';
+
+interface Props {
+  /** Home page: the header sits over the photo at the top instead of on the page colour. */
+  over?: boolean;
+}
+
+const { over = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+// Navigation is links only: no join or sponsor buttons up here.
+// Workshops live on the Events page. SotonShip, set apart at the end, covers our hackathons.
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/events', label: 'Events' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/committee', label: 'Committee' },
+  { href: '/partners', label: 'Partners' },
+];
+---
+
+<header class:list={['site-header', { 'site-header--over': over }]}>
+  <div class="util">
+    <a href="/committee">Contact</a>
+    <a href={site.membership.url}>SUSU page</a>
+  </div>
+  <div class="head-row">
+    <a class="lockup" href="/" aria-label={`${site.name}, home`}>
+      <img src="/logo-mark.png" alt="" width="64" height="75" />
+      <span class="lockup-rule" aria-hidden="true"></span>
+      <span class="lockup-text">
+        <span class="lockup-uni">{site.university}</span>
+        <span class="lockup-name">{site.shortName}</span>
+      </span>
+    </a>
+    <button class="menu" type="button" data-menu aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      {links.map((link) => <a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>)}
+      <span class="nav-rule" aria-hidden="true"></span>
+      <a class="nav-ext" href="/sotonship" aria-current={path === '/sotonship' ? 'page' : undefined}>SotonShip</a>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,135 @@
+{
+  "intro": "Hackathons, workshops, talks and socials. Open any photo to see where it was taken. Send photos from your event to the committee and they will be added here.",
+  "events": {
+    "sotonship-26": {
+      "name": "SotonShip 26",
+      "when": "16 to 18 October 2026",
+      "where": "Barclays Eagle Labs, Southampton",
+      "link": "/sotonship"
+    },
+    "bt-24": {
+      "name": "BT Hackathon '24",
+      "when": "2024",
+      "where": "",
+      "link": "/sotonship"
+    },
+    "sessions": {
+      "name": "Workshops and socials",
+      "when": "",
+      "where": "",
+      "link": "/events"
+    }
+  },
+  "photos": [
+    {
+      "file": "ss26-winners-2.jpg",
+      "event": "sotonship-26",
+      "alt": "A winning team celebrating with their SotonShip 26 banner"
+    },
+    {
+      "file": "ss26-thumbs-up.jpg",
+      "event": "sotonship-26",
+      "alt": "Two participants giving a thumbs up"
+    },
+    {
+      "file": "ss26-peace-signs.jpg",
+      "event": "sotonship-26",
+      "alt": "Two participants smiling with peace signs"
+    },
+    {
+      "file": "ss26-opening.jpg",
+      "event": "sotonship-26",
+      "alt": "An organiser opening the weekend in front of the SotonShip 2026 screen"
+    },
+    {
+      "file": "ss26-cup-challenge.jpg",
+      "event": "sotonship-26",
+      "alt": "Participants building cup towers in a team challenge"
+    },
+    {
+      "file": "ss26-winners.jpg",
+      "event": "sotonship-26",
+      "alt": "A winning team holding their SotonShip 26 winner banner"
+    },
+    {
+      "file": "ss26-waving.jpg",
+      "event": "sotonship-26",
+      "alt": "Two participants waving at the camera"
+    },
+    {
+      "file": "ss26-runner-up.jpg",
+      "event": "sotonship-26",
+      "alt": "A team on stage holding a SotonShip 26 runner-up banner"
+    },
+    {
+      "file": "ss26-working-zone.jpg",
+      "event": "sotonship-26",
+      "alt": "Teams with their laptops in the working zone"
+    },
+    {
+      "file": "ss26-selfie.jpg",
+      "event": "sotonship-26",
+      "alt": "A participant taking a smiling selfie with a friend"
+    },
+    {
+      "file": "ss26-demo.jpg",
+      "event": "sotonship-26",
+      "alt": "A participant demoing a map of Southampton to the judges"
+    },
+    {
+      "file": "ss26-pair.jpg",
+      "event": "sotonship-26",
+      "alt": "Two participants posing at Barclays Eagle Labs"
+    },
+    {
+      "file": "ss26-on-stage.jpg",
+      "event": "sotonship-26",
+      "alt": "A team receiving a prize on stage"
+    },
+    {
+      "file": "ss26-organisers.jpg",
+      "event": "sotonship-26",
+      "alt": "Organisers and guests together after the opening talks"
+    },
+    {
+      "file": "bt24-group-photo.jpg",
+      "event": "bt-24",
+      "alt": "The full cohort of BT Hackathon '24 in front of the screen"
+    },
+    {
+      "file": "bt24-pizza.jpg",
+      "event": "bt-24",
+      "alt": "Members grabbing pizza"
+    },
+    {
+      "file": "bt24-coding-workshop.jpg",
+      "event": "bt-24",
+      "alt": "A mentor demoing a live-coded dashboard"
+    },
+    {
+      "file": "bt24-workshop-floor.jpg",
+      "event": "bt-24",
+      "alt": "Students in a workshop lecture theatre"
+    },
+    {
+      "file": "bt24-keynote-hall.jpg",
+      "event": "bt-24",
+      "alt": "A packed hall at the opening keynote"
+    },
+    {
+      "file": "group-photo.jpg",
+      "event": "sessions",
+      "alt": "A big group photo of members in a computer lab, some sitting on the floor at the front"
+    },
+    {
+      "file": "pair-at-computer.jpg",
+      "event": "sessions",
+      "alt": "Two members smiling at a computer during a session"
+    },
+    {
+      "file": "blue-hoodies.jpg",
+      "event": "sessions",
+      "alt": "Nine members posing together, several in blue hoodies"
+    }
+  ]
+}

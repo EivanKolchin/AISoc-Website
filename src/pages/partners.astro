@@ -1,0 +1,253 @@
+---
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import partners from '../data/partners.json';
+import { hasLink } from '../lib/events';
+
+const contact = partners.contact;
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent(`Partnerships (for ${contact.name})`)}`;
+---
+
+<Base title="Partners" description={partners.intro}>
+  <div class="page-head">
+    <div class="page-head-text">
+      <h1 class="h-page">Partners</h1>
+      <p>{partners.intro}</p>
+    </div>
+  </div>
+
+  <section class="block" aria-labelledby="backed-h">
+    <h2 class="h-sec" id="backed-h">Our partners</h2>
+    <ul class="partner-list">
+      {
+        partners.partners.map((partner, i) => (
+          <li>
+            <button class="partner" type="button" data-dialog-open={'partner-' + i} aria-haspopup="dialog" aria-label={partner.name + ': more about this partner'}>
+              <img src={partner.logo} alt="" loading="lazy" />
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+    {
+      partners.partners.map((partner, i) => (
+        <dialog class="partner-card" id={'partner-' + i} aria-labelledby={'partner-' + i + '-name'}>
+          <form method="dialog" class="pc-close-form">
+            <button class="pc-close" aria-label="Close">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            </button>
+          </form>
+          <div class="pc-logo"><img src={partner.logo} alt="" /></div>
+          <div class="pc-body">
+            <h3 id={'partner-' + i + '-name'}>{partner.name}</h3>
+            <p class="pc-since">Partner for {partner.since}</p>
+            {partner.about && <p>{partner.about}</p>}
+            {hasLink(partner.url) && (
+              <a class="btn btn-p" href={partner.url}>
+                Visit {partner.name}
+              </a>
+            )}
+          </div>
+        </dialog>
+      ))
+    }
+    <p class="partner-ship">
+      {partners.sotonshipNote} <a class="lnk" href="/sotonship#sponsors">See SotonShip's sponsors</a>.
+    </p>
+  </section>
+
+  <div class="two block">
+    <section aria-labelledby="reach-h">
+      <h2 class="h-sec" id="reach-h" style="margin-bottom: 18px">Who comes</h2>
+      <dl class="reach">
+        {
+          partners.audience.facts.map((fact) => (
+            <>
+              <dt>{fact.value}</dt>
+              <dd>{fact.label}</dd>
+            </>
+          ))
+        }
+      </dl>
+      <p class="small-print">Figures as of {partners.audience.asOf}.</p>
+    </section>
+
+    <section aria-labelledby="take-h">
+      <h2 class="h-sec" id="take-h" style="margin-bottom: 18px">How partners take part</h2>
+      <ul class="rows">
+        {
+          partners.ways.map((way) => (
+            <li>
+              <strong>{way.title}</strong>
+              <span>{way.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+
+  <section class="card note" style="margin-bottom: clamp(72px, 7vw, 112px)" aria-labelledby="contact-h">
+    <div class="note-text">
+      <h2 id="contact-h">Who to contact</h2>
+      <p>{contact.name}, {contact.role}. Write to {site.email} and the message is passed straight on.</p>
+    </div>
+    <a class="btn btn-p" href={mailto}>Email partnerships</a>
+  </section>
+</Base>
+
+<style>
+  .partner-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .partner {
+    display: grid;
+    place-items: center;
+    width: 240px;
+    height: 132px;
+    padding: 28px;
+    border: 0;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--line), 0 18px 36px -28px rgba(15, 20, 26, 0.35);
+    cursor: pointer;
+  }
+
+  .partner img {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .partner {
+      transition:
+        transform 0.22s ease-out,
+        box-shadow 0.22s ease-out;
+    }
+
+    .partner:hover,
+    .partner:focus-visible {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 1px var(--line), 0 26px 44px -24px rgba(15, 20, 26, 0.45);
+    }
+  }
+
+  .partner:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .partner-ship {
+    margin-top: 22px;
+    color: var(--muted);
+  }
+
+  /* The full card */
+
+  .partner-card {
+    width: min(560px, calc(100% - 32px));
+    padding: 0;
+    border: 0;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.45);
+  }
+
+  .partner-card::backdrop {
+    background: rgba(11, 14, 18, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .partner-card[open] {
+      animation: pc-in 0.22s ease-out;
+    }
+
+    @keyframes pc-in {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+    }
+  }
+
+  .pc-close-form {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  .pc-close {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: rgba(15, 20, 26, 0.06);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .pc-close:hover {
+    background: rgba(15, 20, 26, 0.12);
+  }
+
+  .pc-logo {
+    display: grid;
+    place-items: center;
+    padding: 56px 40px;
+    background: var(--porc);
+  }
+
+  .pc-logo img {
+    width: min(100%, 320px);
+    height: auto;
+  }
+
+  .pc-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 28px 32px 32px;
+  }
+
+  .pc-body h3 {
+    font-size: 30px;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+  }
+
+  .pc-since {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .pc-body p:not(.pc-since) {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--soft);
+  }
+
+  .pc-body .btn {
+    margin-top: 10px;
+  }
+
+  .partner-card :focus-visible {
+    outline-color: var(--ink);
+  }
+
+  @media (max-width: 560px) {
+    .partner {
+      width: 100%;
+    }
+  }
+</style>

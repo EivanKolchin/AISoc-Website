@@ -1,0 +1,352 @@
+{
+  "intro": "Our applied-AI hackathon: 48 hours, free to enter, building real products on tracks set with our partners. The latest was SotonShip 26, in October 2026.",
+  "heroPhoto": "sotonship-26-crew.jpg",
+  "editions": [
+    {
+      "id": "sotonship-26",
+      "name": "SotonShip 26",
+      "when": "16 to 18 October 2026",
+      "where": "Barclays Eagle Labs, Southampton",
+      "summary": "120 student builders spent a weekend at Barclays Eagle Labs shipping working AI products. Hacking opened on the Friday night after talks from the Mayor of Southampton, and teams demoed to judges on the Sunday. Alongside the build there were workshops, talks from JPMorganChase and Responsible AI researchers, and VC for a Day, where teams invested virtual money in each other's projects.",
+      "blurb": "",
+      "facts": [
+        {
+          "label": "When",
+          "value": "16 to 18 October 2026, 48 hours"
+        },
+        {
+          "label": "Where",
+          "value": "Barclays Eagle Labs, Southampton"
+        },
+        {
+          "label": "Builders",
+          "value": "120 students, teams of two to five"
+        },
+        {
+          "label": "Prizes",
+          "value": "Each track, overall winner, partner prizes and People's Choice"
+        }
+      ],
+      "tracks": [
+        {
+          "name": "Southampton Coastal City",
+          "text": "Tools for the city itself: the port, the coast, transport and climate, built on public data about Southampton."
+        },
+        {
+          "name": "FinTech",
+          "text": "Scams, fraud networks and small-business cash flow, all on synthetic data."
+        },
+        {
+          "name": "Responsible AI",
+          "text": "The AI Cyber Arena with Holistic AI: defend a simulated AI agent, attack it, and get scored on a hidden benchmark."
+        }
+      ],
+      "links": [
+        {
+          "label": "Visit sotonship.space",
+          "url": "https://www.sotonship.space"
+        },
+        {
+          "label": "See all 668 photos",
+          "url": "https://www.sotonship.space/gallery"
+        }
+      ],
+      "photos": [
+        {
+          "file": "sotonship-26-opening.jpg",
+          "alt": "A presenter on stage in front of the SotonShip 2026 screen"
+        },
+        {
+          "file": "sotonship-26-thumbs-up.jpg",
+          "alt": "Two participants giving a thumbs up"
+        },
+        {
+          "file": "sotonship-26-cup-challenge.jpg",
+          "alt": "Participants building cup towers in a team challenge"
+        },
+        {
+          "file": "sotonship-26-demo.jpg",
+          "alt": "A participant demoing a map of Southampton on a large screen"
+        },
+        {
+          "file": "sotonship-26-runner-up.jpg",
+          "alt": "A team on stage holding a SotonShip 26 runner-up banner"
+        },
+        {
+          "file": "sotonship-26-winners.jpg",
+          "alt": "A winning team holding their SotonShip 26 winner banner"
+        }
+      ],
+      "results": [
+        {
+          "track": "Southampton Coastal City",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        },
+        {
+          "track": "FinTech",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        },
+        {
+          "track": "Responsible AI",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        }
+      ],
+      "sponsors": [
+        {
+          "tier": "Event partners and sponsors",
+          "items": [
+            {
+              "name": "Deutsche Bank",
+              "logo": "/sponsors/deutsche-bank.svg"
+            },
+            {
+              "name": "JPMorganChase",
+              "logo": "/sponsors/jpmorganchase.svg"
+            },
+            {
+              "name": "IET",
+              "logo": "/sponsors/iet.svg"
+            },
+            {
+              "name": "Responsible AI UK",
+              "logo": "/sponsors/rai-uk.png"
+            },
+            {
+              "name": "Barclays Eagle Labs",
+              "logo": "/sponsors/barclays-eagle-labs.png"
+            },
+            {
+              "name": "University of Southampton",
+              "logo": "/sponsors/university-of-southampton.png"
+            },
+            {
+              "name": "TrueMoney",
+              "logo": "/sponsors/true-money.png"
+            },
+            {
+              "name": "ITDev",
+              "logo": "/sponsors/itdev.png"
+            }
+          ]
+        },
+        {
+          "tier": "Technical sponsors",
+          "items": [
+            {
+              "name": "Holistic AI",
+              "logo": "/sponsors/holistic-ai.svg"
+            },
+            {
+              "name": "Carbon GPT",
+              "logo": "/sponsors/carbon-gpt.png"
+            }
+          ]
+        },
+        {
+          "tier": "In collaboration with",
+          "items": [
+            {
+              "name": "Southampton City Council",
+              "logo": "/sponsors/southampton-city-council.png"
+            },
+            {
+              "name": "Futureworlds",
+              "logo": "/sponsors/futureworlds.svg"
+            },
+            {
+              "name": "Hackathons UK",
+              "logo": "/sponsors/hackathons-uk-pink.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bt-24",
+      "name": "BT Hackathon '24",
+      "when": "2024",
+      "where": "",
+      "blurb": "150+ students, more than 40 final submissions and six industry mentors on site.",
+      "results": [
+        {
+          "track": "Overall",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "iet-aisoc-2024",
+      "name": "IET x AISoc Hackathon",
+      "when": "26 and 27 October 2024",
+      "where": "Highfield Campus",
+      "blurb": "A model-training challenge with ECS and the IET Solent Network. The top ten teams pitched, for prizes of £500, £300 and £200.",
+      "results": [
+        {
+          "track": "Overall",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "hackai-24",
+      "name": "HackAI 24",
+      "when": "10 and 11 February 2024",
+      "where": "",
+      "blurb": "Teams used a large language model running on their own machines to answer aeronautics questions. The five highest-scoring teams presented their methods to the judges and sponsors.",
+      "results": [
+        {
+          "track": "Overall",
+          "winner": {
+            "team": "Harry Crane, Elizabeth Rigby and Ben Rall",
+            "project": "University of Bath",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "hackai-23",
+      "name": "HackAI 23",
+      "when": "March 2023",
+      "where": "",
+      "blurb": "",
+      "results": [
+        {
+          "track": "Overall",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "hackai-22",
+      "name": "HackAI 22",
+      "when": "February 2022",
+      "where": "",
+      "blurb": "",
+      "results": [
+        {
+          "track": "Overall",
+          "winner": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          },
+          "runnerUp": {
+            "team": "",
+            "project": "",
+            "photo": ""
+          }
+        }
+      ]
+    }
+  ],
+  "earlierPhotos": [
+    {
+      "file": "earlier-keynote-hall.jpg",
+      "alt": "A packed hall at the opening keynote of BT Hackathon '24"
+    },
+    {
+      "file": "earlier-coding-workshop.jpg",
+      "alt": "A mentor live-coding a dashboard on a wide screen"
+    },
+    {
+      "file": "earlier-pizza.jpg",
+      "alt": "Members grabbing pizza at BT Hackathon '24"
+    }
+  ],
+  "elsewhere": [
+    {
+      "name": "SotonHack",
+      "by": "Run by ECSS, the Electronics and Computer Science Society",
+      "text": "The university's annual 24-hour hackathon, free and open to students from any university. SotonHack 26 had 121 attendees and 40 projects. The next one is on 13 and 14 March 2027 in the Centenary Building.",
+      "logo": "/hackathons/sotonhack.svg",
+      "logoTone": "light",
+      "links": [
+        {
+          "label": "sotonhack.org",
+          "url": "https://sotonhack.org"
+        },
+        {
+          "label": "ECSS",
+          "url": "https://society.ecs.soton.ac.uk"
+        }
+      ]
+    },
+    {
+      "name": "MedTech Hackathon",
+      "by": "Run by the Southampton MedTech Society",
+      "text": "A weekend of building for health and medicine. In November 2025, teams of three to six worked in the Gower Building and pitched their ideas to judges.",
+      "logo": "/hackathons/medtech.png",
+      "logoTone": "light",
+      "links": [
+        {
+          "label": "MedTech Society on SUSU",
+          "url": "https://www.susu.org/groups/soton-medical-technology-society"
+        },
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/sotonmedtechsoc/"
+        }
+      ]
+    }
+  ]
+}

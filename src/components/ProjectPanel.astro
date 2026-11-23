@@ -1,0 +1,65 @@
+---
+// A large project: artwork on one side, the facts on the other.
+import ProjectPlate from './ProjectPlate.astro';
+import { hasLink } from '../lib/events';
+
+interface Fact {
+  label: string;
+  value: string;
+  url: string;
+}
+
+interface Action {
+  label: string;
+  url: string;
+  primary: boolean;
+}
+
+interface Props {
+  project: {
+    id: string;
+    name: string;
+    plate: string;
+    plateAlt: string;
+    tags: { label: string; live: boolean }[];
+    title: string;
+    summary: string;
+    facts: Fact[];
+    actions: Action[];
+  };
+  /** Put the artwork on the right instead of the left. */
+  flip?: boolean;
+}
+
+const { project, flip = false } = Astro.props;
+const actions = project.actions.filter((action) => hasLink(action.url));
+---
+
+<article class:list={['flag', { 'flag--flip': flip }]} id={project.id}>
+  <div class="plate flag-plate" role="img" aria-label={project.plateAlt}>
+    <ProjectPlate kind={project.plate} />
+    {project.plate === 'tokens' && <span class="plate-name" aria-hidden="true">{project.name}</span>}
+    {project.plate === 'hours' && <span class="plate-note" aria-hidden="true">hours, overnight</span>}
+  </div>
+  <div class="flag-text">
+    <h2>{project.title}</h2>
+    <p>{project.summary}</p>
+    <dl class="ruled">
+      {
+        project.facts.map((fact) => (
+          <>
+            <dt>{fact.label}</dt>
+            <dd>{hasLink(fact.url) ? <a class="lnk" href={fact.url}>{fact.value}</a> : fact.value}</dd>
+          </>
+        ))
+      }
+    </dl>
+    {
+      actions.length > 0 && (
+        <div class="actions">
+          {actions.map((action) => <a class:list={['btn', action.primary ? 'btn-p' : 'btn-o']} href={action.url}>{action.label}</a>)}
+        </div>
+      )
+    }
+  </div>
+</article>

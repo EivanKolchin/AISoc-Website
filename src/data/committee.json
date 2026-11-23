@@ -1,0 +1,27 @@
+{
+  "year": "2026 to 2027",
+  "photoNote": "To add a photo, put it in src/assets/committee/ and write its file name in \"photo\". A square photo works best.",
+  "people": [
+    { "name": "Nithun Sundarrajan", "role": "President", "initials": "NS", "photo": "", "about": "Runs the society and chairs the committee. Ask about anything that does not fit elsewhere.", "bio": "" },
+    { "name": "Aditya Kumar", "role": "Vice President", "initials": "AK", "photo": "", "about": "Works alongside the President and steps in for them.", "bio": "" },
+    { "name": "Philbert Poku", "role": "Treasurer", "initials": "PP", "photo": "", "about": "Looks after the society's budget and spending.", "bio": "" },
+    { "name": "Ashwin Tamang", "role": "Secretary", "initials": "AT", "photo": "", "about": "Keeps the committee's meetings, records and SUSU paperwork in order.", "bio": "" },
+    { "name": "Zola Adonsi", "role": "Welfare Officer", "initials": "ZA", "photo": "", "about": "Someone to talk to if anything at the society is worrying you.", "bio": "" },
+    { "name": "Jamie Simmons", "role": "Head of Education", "initials": "JS", "photo": "", "about": "Runs the Thursday workshops and finds the people who teach them.", "bio": "" },
+    { "name": "Eivan Kolchin Rivas", "role": "Lead Project Architect", "initials": "EK", "photo": "", "about": "Leads SotonLM and the society's project teams.", "bio": "" },
+    { "name": "Faran Afzal", "role": "Head of Partnerships", "initials": "FA", "photo": "", "about": "Works with sponsors, speakers and partner societies.", "bio": "" },
+    { "name": "Ines Ranzan Shil", "role": "Head of Marketing", "initials": "IR", "photo": "", "about": "Posters, Instagram and how the society shows up around campus.", "bio": "" },
+    { "name": "Unt Aung", "role": "Head of Communications", "initials": "UA", "photo": "", "about": "Announcements on Discord, WhatsApp and email.", "bio": "" },
+    { "name": "Andre Teixeira Pino", "role": "Head of Operations", "initials": "AP", "photo": "", "about": "Rooms, bookings and running events on the day.", "bio": "" },
+    { "name": "Mehmet Icen", "role": "Hackathon Officer", "initials": "MI", "photo": "", "about": "Organises SotonShip and the society's other hackathons.", "bio": "" },
+    { "name": "Sumayea Akter", "role": "Hackathon Officer", "initials": "SA", "photo": "", "about": "Organises SotonShip and the society's other hackathons.", "bio": "" }
+  ],
+  "ask": [
+    { "topic": "Sponsoring an event, or speaking at one", "who": "Faran Afzal", "role": "Head of Partnerships" },
+    { "topic": "Workshops, or teaching one", "who": "Jamie Simmons", "role": "Head of Education" },
+    { "topic": "Joining or starting a project", "who": "Eivan Kolchin Rivas", "role": "Lead Project Architect" },
+    { "topic": "Hackathons", "who": "Mehmet Icen, Sumayea Akter", "role": "Hackathon Officers" },
+    { "topic": "Something that is worrying you", "who": "Zola Adonsi", "role": "Welfare Officer" },
+    { "topic": "Anything else", "who": "Nithun Sundarrajan", "role": "President" }
+  ]
+}

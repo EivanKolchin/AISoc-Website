@@ -1,0 +1,63 @@
+---
+// Footer laid out like the University of Southampton site's, with the society's mark
+// beside the Students' Union and University marks.
+import site from '../data/site.json';
+import Socials from './Socials.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <div class="marks">
+        <a href="/" aria-label={`${site.name}, home`}>
+          <img src="/brand/aisoc-mark-white.png" alt="" width="54" height="64" loading="lazy" />
+        </a>
+        <span class="marks-rule" aria-hidden="true"></span>
+        <a class="mark-susu" href="https://www.susu.org/">
+          <img src="/brand/susu-white.png" alt="Southampton University Students' Union" width="125" height="64" loading="lazy" />
+        </a>
+        <span class="marks-rule" aria-hidden="true"></span>
+        <a href="https://www.southampton.ac.uk/">
+          <img src="/brand/uos-white.svg" alt="University of Southampton" width="231" height="64" loading="lazy" />
+        </a>
+      </div>
+      <p>A student society at the University of Southampton, part of the Students' Union.</p>
+    </div>
+    <nav class="foot-col" aria-labelledby="foot-info">
+      <h2 id="foot-info">Information</h2>
+      <ul>
+        <li><a href="/events">Events and calendar</a></li>
+        <li><a href="/events#workshops">Workshops</a></li>
+        <li><a href="/projects">Projects</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/sotonship">SotonShip and hackathons</a></li>
+        <li><a href="/committee">Committee</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/events#past">Past events</a></li>
+      </ul>
+    </nav>
+    <div class="foot-col">
+      <h2>Contact us</h2>
+      <ul>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a href="/committee">Who to contact on the committee</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h2>Connect with us</h2>
+      <Socials />
+      <div class="foot-rule" aria-hidden="true"></div>
+      <p>Membership is free through SUSU, so you can vote and stand for committee.</p>
+      <a class="btn btn-w btn-susu" href={site.membership.url}>
+        <img class="btn-susu-mark" src="/brand/susu-mark-white.png" alt="" width="27" height="23" loading="lazy" />
+        <span>Open the SUSU page</span>
+      </a>
+    </div>
+  </div>
+  <div class="foot-legal">
+    <p>© {year} {site.name}</p>
+    <p class="foot-legal-links"><a href={`mailto:${site.email}`}>Contact</a><a href={site.membership.url}>SUSU page</a></p>
+  </div>
+</footer>

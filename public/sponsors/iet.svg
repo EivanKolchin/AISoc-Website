@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  IET master logotype (positive / for white or light backgrounds).
+
+  IET Mini Brand Guidelines v3.0 (March 2026):
+    p6  master logotype = IET monogram + equals graphic device + IET wordmark
+    p12 third-party applications must use the master logotype IN FULL, master
+        (positive) purple version on a white or very light background
+    p15 Dark Purple  Pantone 519 C  #4F1B59
+        Bright Purple Pantone 2081 C #9C67A8
+    p17 Europa is the primary typeface; Arial is the sanctioned system
+        substitute where Europa is unavailable (as on the web)
+
+  Minimum width: 30mm / 160px. Below that, swap to iet-monogram.svg (p14).
+  Clear space: at least the height of the monogram "E" on all four sides —
+  applied by the tile padding in components/SponsorLogo.tsx, not baked in here.
+
+  NOTE: this is a faithful reconstruction, not the official master artwork.
+  Request the supplied EPS/SVG from brandenquiries@theiet.org and drop it in
+  over this file before launch.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1132 182"
+     role="img" aria-label="IET — The Institution of Engineering and Technology">
+  <!-- monogram -->
+  <g fill="#4F1B59">
+    <rect x="0"       y="0"      width="39.34"   height="176.08"/>
+    <rect x="70.162"  y="0.054"  width="131.621" height="39.612"/>
+    <rect x="223.275" y="0.017"  width="131.976" height="39.568"/>
+    <rect x="268.770" y="37.337" width="40.930"  height="138.721"/>
+  </g>
+  <!-- equals graphic device -->
+  <g fill="#9C67A8">
+    <rect x="70.424" y="68.023"  width="130.836" height="40.089"/>
+    <rect x="70.126" y="137.042" width="131.181" height="39.017"/>
+  </g>
+  <!-- wordmark -->
+  <g fill="#9C67A8" font-family="Europa, Arial, Helvetica, sans-serif"
+     font-weight="700" font-size="52">
+    <text x="381.25" y="113"   textLength="449" lengthAdjust="spacing">The Institution of</text>
+    <text x="381.25" y="170.5" textLength="747" lengthAdjust="spacing">Engineering and Technology</text>
+  </g>
+</svg>

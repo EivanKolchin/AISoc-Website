@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Socials from '../components/Socials.astro';
+import site from '../data/site.json';
+import eventsData from '../data/events.json';
+import '../styles/nextbar.css';
+import '../styles/home.css';
+import { type EventItem, upcoming } from '../lib/events';
+import { renderDateList, renderNextEvent } from '../lib/calendar';
+import { photo } from '../lib/photos';
+
+const events = eventsData as EventItem[];
+const now = new Date();
+const slot = site.workshopSlot;
+const slotLine = `Workshops run every ${slot.day} at ${slot.start} in ${slot.room}.`;
+const soon = upcoming(events, now);
+const listEmpty = `Nothing else is booked yet. Workshops run every ${slot.day} at ${slot.start}.`;
+const glow =
+  'radial-gradient(46% 56% at 78% 24%, rgba(31,111,209,.95), transparent 72%), radial-gradient(40% 50% at 24% 34%, rgba(30,64,175,.9), transparent 72%), radial-gradient(36% 42% at 62% 86%, rgba(255,150,104,.85), transparent 72%)';
+---
+
+<Base home>
+  <section class="hero" aria-labelledby="hero-h">
+    <Image class="hero-photo" src={photo('bt24-group-photo.jpg')} alt="" widths={[720, 1080, 1440]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <h1 id="hero-h">{site.statement}</h1>
+      <Socials tone="glass" />
+    </div>
+    <div class="hero-next">
+      <div class="next-wrap">
+        <!-- A bus of parallel traces runs in from the right and drops into the next-event bar. The lit one carries a pulse. -->
+        <svg class="traces" aria-hidden="true" viewBox="0 0 780 560">
+          <defs>
+            <linearGradient id="trace-live" gradientUnits="userSpaceOnUse" x1="780" y1="132" x2="540" y2="556">
+              <stop offset="0" stop-color="#1f9bd1"></stop>
+              <stop offset=".5" stop-color="#1f6fd1"></stop>
+              <stop offset="1" stop-color="#1e40af"></stop>
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="#f4f4f5" stroke-opacity=".18" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M780 104 H660 L568 196 V556"></path>
+            <path d="M780 160 H632 L512 280 V556"></path>
+            <path d="M780 188 H618 L484 322 V556"></path>
+            <path d="M780 216 H604 L456 364 V556"></path>
+          </g>
+          <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M780 132 H646 L540 238 V556" stroke="url(#trace-live)" stroke-width="2.2"></path>
+            <path class="pulse" d="M780 132 H646 L540 238 V556" stroke="#fff" stroke-opacity=".9" stroke-width="2.6"></path>
+          </g>
+          <g fill="#0b0e12" stroke="#f4f4f5" stroke-opacity=".4" stroke-width="1.4">
+            <circle cx="568" cy="552" r="4.5"></circle>
+            <circle cx="512" cy="552" r="4.5"></circle>
+            <circle cx="484" cy="552" r="4.5"></circle>
+            <circle cx="456" cy="552" r="4.5"></circle>
+          </g>
+          <circle cx="540" cy="552" r="5.5" fill="#1f6fd1"></circle>
+        </svg>
+        <div class="nextbar" aria-label="Next event" role="group" data-next-event data-slot={slotLine} set:html={renderNextEvent(soon[0] ?? null, now, slotLine)} />
+      </div>
+    </div>
+  </section>
+
+  <div class="home-dark">
+    <section class="news" aria-labelledby="news-h">
+      <h2 class="h-line" id="news-h">News</h2>
+      <a class="news-box" href={site.notice.url}>{site.notice.text}</a>
+    </section>
+
+    <nav class="bus" aria-label="Sections">
+      <a class="way way--live" href="/events">
+        <span class="way-name">Events</span>
+        <span class="way-desc">The calendar, weekly workshops, and what you missed.</span>
+      </a>
+      <a class="way" href="/projects">
+        <span class="way-name">Projects</span>
+        <span class="way-desc">SotonLM, and what members have built.</span>
+      </a>
+      <a class="way" href="/gallery">
+        <span class="way-name">Gallery</span>
+        <span class="way-desc">Photos from workshops, talks and socials.</span>
+      </a>
+      <a class="way" href="/committee">
+        <span class="way-name">Committee</span>
+        <span class="way-desc">Who to ask, and how to reach them.</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="home-light">
+    <section class="upcoming" aria-labelledby="upcoming-h">
+      <div class="upcoming-head">
+        <h2 class="h-line" id="upcoming-h">Upcoming events</h2>
+        <a class="btn btn-g" href="/events">View all events</a>
+      </div>
+      <div class="dl" data-date-list data-skip="1" data-count="3" data-empty={listEmpty} set:html={renderDateList(soon.slice(1, 4), listEmpty)} />
+    </section>
+
+    <section class="about-row">
+      <div class="about">
+        <div class="about-photo">
+          <div class="about-main">
+            <Image src={photo('group-photo.jpg')} alt="A big group photo of members in a computer lab" widths={[480, 760, 1040]} sizes="(max-width: 980px) 100vw, 520px" />
+          </div>
+          <div class="about-minis">
+            <Image src={photo('blue-hoodies.jpg')} alt="Members posing together in blue hoodies" widths={[320, 480]} sizes="(max-width: 980px) 50vw, 200px" />
+            <Image src={photo('ss26-thumbs-up.jpg')} alt="Two participants at SotonShip 26 giving a thumbs up" widths={[320, 480]} sizes="(max-width: 980px) 50vw, 200px" />
+          </div>
+        </div>
+        <section class="about-panel" aria-labelledby="about-h">
+          <h2 id="about-h">Who we are</h2>
+          <p>{site.about.who}</p>
+          <h3>What we do</h3>
+          <p>{site.about.what}</p>
+          <h3>What we aim for</h3>
+          <p>{site.about.aim}</p>
+          <p class="about-links"><a href="/committee">Meet the committee</a><a href="/events#workshops">Come to a workshop</a></p>
+        </section>
+      </div>
+      <div class="built">
+        <h2 class="h-line">Built by members</h2>
+        <a class="lm" href="/projects#sotonlm">
+          <span class="lm-glow" aria-hidden="true" style={`background: ${glow}`}></span>
+          <span class="lm-glass">
+            <span class="lm-name">SotonLM</span>
+            <span class="lm-text">A language model written from scratch by three student teams.</span>
+          </span>
+        </a>
+      </div>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,31 @@
+---
+// The society's community links as see-through glyph badges. Links still set to "#"
+// in site.json (WhatsApp, until the committee adds it) are left out.
+import site from '../data/site.json';
+import { SOCIAL_ICONS } from '../lib/icons';
+import { hasLink } from '../lib/events';
+
+interface Props {
+  /** "glass" blurs whatever is behind it (use over a photo). */
+  tone?: 'plain' | 'glass';
+  class?: string;
+}
+
+const { tone = 'plain', class: className } = Astro.props;
+const links = site.social.filter((item) => hasLink(item.url) && SOCIAL_ICONS[item.id]);
+const label = (id: string, name: string) => (id === 'discord' ? `${name}, ${site.stats.discordMembers} members` : name);
+---
+
+<ul class:list={['socials', `socials--${tone}`, className]}>
+  {
+    links.map((item) => (
+      <li>
+        <a class="sb" href={item.url} aria-label={label(item.id, item.label)} title={label(item.id, item.label)}>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path fill="currentColor" d={SOCIAL_ICONS[item.id]} />
+          </svg>
+        </a>
+      </li>
+    ))
+  }
+</ul>

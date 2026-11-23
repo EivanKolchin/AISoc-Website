@@ -1,0 +1,68 @@
+{
+  "intro": "What members are building this year, and what they have already shipped. Anyone can join a team, and anyone can start one.",
+  "lead": "Eivan Kolchin Rivas",
+  "flagships": [
+    {
+      "id": "sotonlm",
+      "name": "SotonLM",
+      "plate": "tokens",
+      "plateAlt": "Rows of token blocks, a few lit in blue, above the name SotonLM",
+      "tags": [
+        { "label": "In progress", "live": true },
+        { "label": "Since 2025", "live": false }
+      ],
+      "title": "A language model, written from scratch",
+      "summary": "Three student teams are building a working language model end to end: the architecture, the data it learns from, and the training that makes it run.",
+      "teaser": "Three teams are writing a language model from scratch. Ask the projects team to join one.",
+      "facts": [
+        { "label": "Teams", "value": "Architecture, data engineering, training ops", "url": "" },
+        { "label": "Lead", "value": "Eivan Kolchin Rivas", "url": "" },
+        { "label": "Code", "value": "github.com/SotonLM", "url": "https://github.com/SotonLM" }
+      ],
+      "actions": [
+        { "label": "Join a team", "url": "mailto:aisoc@soton.ac.uk?subject=Joining%20SotonLM", "primary": true },
+        { "label": "Follow the build", "url": "https://github.com/SotonLM", "primary": false }
+      ]
+    },
+    {
+      "id": "sotonship-26",
+      "name": "SotonShip 26",
+      "plate": "hours",
+      "plateAlt": "The number 48 drawn in outline above a row of 48 marks, one for each hour",
+      "tags": [
+        { "label": "Hackathon", "live": false },
+        { "label": "October 2026", "live": false }
+      ],
+      "title": "SotonShip 26: 48 hours to a working product",
+      "summary": "Our applied-AI hackathon at Barclays Eagle Labs. Teams formed on the Friday, built through two nights, and demoed to judges on the Sunday.",
+      "teaser": "",
+      "facts": [
+        { "label": "When", "value": "16 to 18 October 2026", "url": "" },
+        { "label": "Builders", "value": "120, free to enter", "url": "" },
+        { "label": "Tracks", "value": "Southampton Coastal City, FinTech, Responsible AI", "url": "" }
+      ],
+      "actions": [
+        { "label": "See the gallery, 668 photos", "url": "https://www.sotonship.space/gallery", "primary": true },
+        { "label": "Event site", "url": "https://www.sotonship.space", "primary": false }
+      ]
+    }
+  ],
+  "small": [
+    {
+      "id": "mood-detector",
+      "name": "Mood Detector",
+      "plate": "face",
+      "tag": "Bunfight demo",
+      "summary": "A webcam reads your face and delivers a deadpan verdict. It runs entirely in your browser, so nothing leaves your laptop.",
+      "action": { "label": "See the code", "url": "https://github.com/EivanKolchin/AI-Soc-Bunfight" }
+    },
+    {
+      "id": "air-pictionary",
+      "name": "Air Pictionary",
+      "plate": "stroke",
+      "tag": "Bunfight demo",
+      "summary": "Draw in the air with a fingertip and erase with a palm. The model guesses what you meant from 24 shapes.",
+      "action": { "label": "See the code", "url": "https://github.com/EivanKolchin/AI-Soc-Bunfight" }
+    }
+  ]
+}

@@ -277,7 +277,23 @@ function initSubscribe(): void {
   });
 }
 
+// The page's base colour shows only if a browser bounces past an edge. Near the bottom it
+// switches to the footer's navy (see html.at-end in global.css), so a bounce there matches the
+// footer instead of showing the dark base underneath it.
+function initEdgeColour(): void {
+  const root = document.documentElement;
+  // toggle() with an unchanged value leaves the class list alone, so this is cheap on every scroll.
+  const update = () => {
+    const halfway = (root.scrollHeight - window.innerHeight) / 2;
+    root.classList.toggle('at-end', window.scrollY > halfway);
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+}
+
 initMenu();
+initEdgeColour();
 document.querySelectorAll<HTMLElement>('[data-calendar]').forEach(initCalendar);
 initNextEvent();
 initEventLists();

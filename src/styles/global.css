@@ -98,10 +98,31 @@ html {
   scroll-behavior: smooth;
   overflow-x: clip;
   overscroll-behavior: none;
+  /* The colour a browser shows if it bounces past an edge anyway (some Safari and iOS versions
+     ignore overscroll-behavior on the page). It matches the dark header at the top, and site.ts
+     switches it to the footer's navy near the bottom, so no edge ever shows a black gap. */
+  background-color: #0b0e12;
+}
+
+html.at-end {
+  background-color: var(--navy-deep);
 }
 
 dialog {
   overscroll-behavior: none;
+}
+
+/* No visible scroll bars; the page and pop-ups still scroll with the wheel, touch and keys. */
+html,
+body,
+dialog {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+dialog::-webkit-scrollbar {
+  display: none;
 }
 
 body {
